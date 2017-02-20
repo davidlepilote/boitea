@@ -1,0 +1,48 @@
+frere:Brûler un truc:1.mp3
+bap:Bonjour:2.mp3
+frere:À l'ouest:3.mp3
+mere:La gorge:4.mp3
+bap:Et alors ?:5.mp3
+bap:J'fais un truc:6.mp3
+bap:Petit être froid:7.mp3
+mere:Mais ça va pas:8.mp3
+mere:Feu à la baraque:9.mp3
+bap:J'suis très net:10.mp3
+mere:T'es pas net:11.mp3
+mere:Non non non:12.mp3
+frere:T'éteins:13.mp3
+frere:La gueule:14.mp3
+bap:C'est bon:15.mp3
+mere:Ma maison:16.mp3
+mere:N'importe quoi:17.mp3
+bap:Ça craint rien:18.mp3
+mere:À l'école:19.mp3
+mere:Il est fondu:20.mp3
+bap:Dans ma chambre:21.mp3
+bap:Et d'abord:22.mp3
+bap:???:23.mp3
+bap:Il est nickel:24.mp3
+mere:Le linge:25.mp3
+frere:Magne-toi:26.mp3
+bap:J'ai rien pris:27.mp3
+bap:J'ai rien pris (2):28.mp3
+bap:L'eau:29.mp3
+mere:T'es barge:30.mp3
+mere:Dans quel état:31.mp3
+mere:Putain:32.mp3
+mere:Tu te vois pas:33.mp3
+bap:Du Sable:34.mp3
+mere:Tout de suite:35.mp3
+frere:Tu coupes:36.mp3
+mere:Tu vas dehors:37.mp3
+mere:Le bordel:38.mp3
+bap:Quel truc ?:39.mp3
+bap:Des précautions:40.mp3
+bap:Pourquoi ?:41.mp3
+frere:T'es con ?:42.mp3
+mere:[Toux]:43.mp3
+frere:J'm'en fous:44.mp3
+bap:L'été c'est loin:45.mp3
+frere:Fumé ou quoi ?:46.mp3
+mere:Le droit de quoi:47.mp3
+frere:Direct Facebook:48.mp3
