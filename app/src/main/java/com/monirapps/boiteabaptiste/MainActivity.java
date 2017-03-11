@@ -5,6 +5,11 @@ import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -20,13 +25,38 @@ import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity implements RealmRecyclerView.OnRefreshListener {
+public class MainActivity extends AppCompatActivity {
 
-  private BoiteRecyclerView sounds;
+  public static class BoitesPagerAdapter extends FragmentStatePagerAdapter {
 
-  private RealmBasedRecyclerViewAdapter soundsAdapter;
+    private Context context;
+
+    public BoitesPagerAdapter(FragmentManager fm, Context context) {
+      super(fm);
+      this.context = context;
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+      return new SoundsFragment();
+    }
+
+    @Override
+    public int getCount() {
+      return 3;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+      return "Sons";
+    }
+  }
 
   private static MediaPlayer mediaPlayer = new MediaPlayer();
+
+  private ViewPager pager;
+
+  private TabLayout tabs;
 
   private View loader;
 
@@ -59,9 +89,9 @@ public class MainActivity extends AppCompatActivity implements RealmRecyclerView
       endLoading(config);
     }
 
-    soundsAdapter = new SoundsAdapter(getApplicationContext(), realm.where(Sound.class).equalTo("soundDownloaded", true).findAll());
-    sounds.setOnRefreshListener(this);
-    sounds.setAdapter(soundsAdapter);
+    pager.setAdapter(new BoitesPagerAdapter(getSupportFragmentManager(), getApplicationContext()));
+    tabs.setupWithViewPager(pager);
+    pager.setCurrentItem(1);
 
     retrieveConfig();
   }
@@ -76,9 +106,6 @@ public class MainActivity extends AppCompatActivity implements RealmRecyclerView
         BoiteServices.API.downloadSound(getApplicationContext(), sound.getId(), sound.getSound());
       }
     }
-    if (soundsAdapter != null) {
-      soundsAdapter.notifyDataSetChanged();
-    }
   }
 
   @Override
@@ -89,7 +116,8 @@ public class MainActivity extends AppCompatActivity implements RealmRecyclerView
 
   private void bindViews() {
     loader = findViewById(R.id.loader);
-    sounds = (BoiteRecyclerView) findViewById(R.id.sounds);
+    pager = (ViewPager) findViewById(R.id.viewpager);
+    tabs = (TabLayout) findViewById(R.id.tabs);
   }
 
   private void retrieveConfig() {
@@ -139,9 +167,4 @@ public class MainActivity extends AppCompatActivity implements RealmRecyclerView
     }
   }
 
-
-  @Override
-  public void onRefresh() {
-
-  }
 }

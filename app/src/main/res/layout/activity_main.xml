@@ -8,14 +8,27 @@
     android:layout_height="match_parent"
     tools:context="com.monirapps.boiteabaptiste.MainActivity">
 
-    <com.monirapps.boiteabaptiste.BoiteRecyclerView
-        android:id="@+id/sounds"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:rrvIsRefreshable="true"
-        app:rrvLayoutType="LinearLayout"
-        app:rrvSwipeToDelete="false"
-        />
+        android:orientation="vertical"
+        >
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabMode="fixed"
+            />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/loader"
