@@ -70,7 +70,7 @@ public class Config extends RealmObject {
     for (Sound newSound : newConfig.getSounds()) {
       final Sound oldSound = realm.where(Sound.class).equalTo("id", newSound.getId()).findFirst();
       if (oldSound != null) {
-        if (oldSound.getUpdated() < newSound.getUpdated()) {
+        if (true || oldSound.getUpdated() < newSound.getUpdated()) {
           oldSound.setUpdated(newSound.getUpdated());
           oldSound.setTitle(newSound.getTitle());
           oldSound.setColor(newSound.getColor());
