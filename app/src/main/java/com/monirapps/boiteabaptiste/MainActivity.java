@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements RealmRecyclerView
 
     realm = Realm.getDefaultInstance();
 
-    realm.where(Config.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<Config>>() {
+    realm.where(Config.class).findAll().addChangeListener(new RealmChangeListener<RealmResults<Config>>() {
       @Override
       public void onChange(RealmResults<Config> element) {
         if (element.size() > 0) {
