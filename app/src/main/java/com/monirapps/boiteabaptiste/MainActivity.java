@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Context context;
 
+    private static String[] titles = new String[]{"Favoris", "Sons", "Autres boîtes"};
+
     public BoitesPagerAdapter(FragmentManager fm, Context context) {
       super(fm);
       this.context = context;
@@ -38,17 +40,26 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public Fragment getItem(int position) {
-      return new SoundsFragment();
+      switch (position){
+        case 0:
+          return SoundsFragment.newInstance(true);
+        case 1:
+          return SoundsFragment.newInstance(false);
+        case 2:
+          return SoundsFragment.newInstance(false);
+        default:
+          return SoundsFragment.newInstance(false);
+      }
     }
 
     @Override
     public int getCount() {
-      return 3;
+      return titles.length;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-      return "Sons";
+      return titles[position];
     }
   }
 

@@ -21,9 +21,12 @@ import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.Realm;
 import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmChangeListener;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefreshListener {
+
+  public static final String ONLY_FAVORITES = "only favorites";
 
   private BoiteRecyclerView sounds;
 
@@ -31,10 +34,21 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
 
   private Realm realm;
 
+  private boolean onlyFavorites;
+
+  public static SoundsFragment newInstance(boolean onlyFavorites){
+    Bundle args = new Bundle();
+    args.putBoolean(ONLY_FAVORITES, onlyFavorites);
+    SoundsFragment fragment = new SoundsFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     realm = Realm.getDefaultInstance();
+    onlyFavorites = getArguments().getBoolean(ONLY_FAVORITES);
   }
 
   @Nullable
@@ -63,7 +77,12 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
       }
     }
 
-    soundsAdapter = new SoundsAdapter(getContext(), realm.where(Sound.class).equalTo("soundDownloaded", true).findAll());
+    final RealmQuery<Sound> data = realm.where(Sound.class).equalTo("soundDownloaded", true);
+    if(onlyFavorites){
+      data.equalTo("favorite", true);
+    }
+
+    soundsAdapter = new SoundsAdapter(getContext(), data.findAll());
     sounds.setOnRefreshListener(this);
     sounds.setAdapter(soundsAdapter);
 
