@@ -79,18 +79,7 @@ public class MainActivity extends AppCompatActivity implements RealmRecyclerView
     sounds.setOnRefreshListener(this);
     sounds.setAdapter(soundsAdapter);
 
-    //getSupportActionBar().setTitle("La boîte à Sound");
-
     retrieveConfig();
-
-    int i = 0;
-//    baptistes = (RecyclerView) findViewById(R.id.baptistes);
-//
-//    List<Sound> soundList = getBaptistes();
-//
-//    baptistes.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-//    baptistesAdapter = new BaptisteAdapter(soundList);
-//    baptistes.setAdapter(baptistesAdapter);
   }
 
   @Override
