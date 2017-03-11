@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BoiteABaptiste</string>
+    <string name="loading">Chargement des sons …</string>
 </resources>
