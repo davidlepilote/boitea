@@ -11,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -37,6 +38,17 @@ dependencies {
     //REALM
     compile 'io.realm:android-adapters:1.4.1'
     compile 'com.github.thorbenprimke:realm-recyclerview:0.9.25'
+
+    //ADINCUBE
+    compile ('com.adincube.sdk:AdinCube-Java-6fbf:1.+@aar') {
+        transitive = true
+    }
+    compile('com.adincube.sdk:AdinCube-Native-RecyclerView-Extension:1.+') {
+        transitive = true
+    }
+
+    //MULTIDEX
+    compile 'com.android.support:multidex:1.0.1'
 
     testCompile 'junit:junit:4.12'
 }

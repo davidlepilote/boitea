@@ -1,8 +1,10 @@
 package com.monirapps.boiteabaptiste;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -91,8 +93,8 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
           }
         });
         realm.close();
-        notifyDataSetChanged();
-      }
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent(SoundsFragment.SET_CHANGED));
+       }
     });
     holder.favorite.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -106,7 +108,7 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
           }
         });
         realm.close();
-        notifyDataSetChanged();
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent(SoundsFragment.SET_CHANGED));
       }
     });
   }

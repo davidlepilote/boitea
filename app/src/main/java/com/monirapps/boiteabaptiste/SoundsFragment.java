@@ -15,6 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.adincube.sdk.nativead.NativeAdViewBinding;
+import com.adincube.sdk.nativead.recycler.NativeAdRecyclerViewAdapter;
+import com.adincube.sdk.nativead.stream.NativeAdStreamPositions;
 import com.google.gson.Gson;
 
 import java.io.FileInputStream;
@@ -35,9 +38,13 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
 
   public static final String REFRESH_LIST = "refresh list";
 
+  public static final String SET_CHANGED = "set changed";
+
   private BoiteRecyclerView sounds;
 
   private RealmBasedRecyclerViewAdapter soundsAdapter;
+
+  private NativeAdRecyclerViewAdapter<SoundsAdapter.SoundViewHolder> nativeAdapter;
 
   private Realm realm;
 
@@ -48,6 +55,9 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
     public void onReceive(Context context, Intent intent) {
       if (REFRESH_LIST.equals(intent.getAction())) {
         refreshList();
+      }
+      if (SET_CHANGED.equals(intent.getAction())){
+        nativeAdapter.notifyDataSetChanged();
       }
     }
   };
@@ -64,12 +74,16 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     onlyFavorites = getArguments().getBoolean(ONLY_FAVORITES);
-    LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver, new IntentFilter(REFRESH_LIST));
+    final IntentFilter intentFilter = new IntentFilter();
+    intentFilter.addAction(REFRESH_LIST);
+    intentFilter.addAction(SET_CHANGED);
+    LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver, intentFilter);
   }
 
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+    nativeAdapter.destroy();
     realm.close();
   }
 
@@ -113,8 +127,26 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
       data.equalTo("favorite", true);
     }
     soundsAdapter = new SoundsAdapter(getContext(), data.findAllSorted(sortingStyle.sortingField, sortingStyle.order));
+
+    NativeAdViewBinding binding = new NativeAdViewBinding.Builder(R.layout.native_ad_item)
+        .withTitleViewId(R.id.title)
+        .withCallToActionViewId(R.id.callToAction)
+        .withDescriptionViewId(R.id.description)
+        .withRatingViewId(R.id.rating)
+        .withIconViewId(R.id.icon)
+        .withCoverViewId(R.id.cover)
+        .build();
+
+    NativeAdStreamPositions positions = new NativeAdStreamPositions.Builder()
+        .withPredefinedPositions(0) // position starts at 0.
+        .withRepeatFrequency(1)
+        .build();
+
+    nativeAdapter = new NativeAdRecyclerViewAdapter<SoundsAdapter.SoundViewHolder>(getContext(), soundsAdapter, binding, positions);
+
     sounds.setOnRefreshListener(this);
     sounds.setAdapter(soundsAdapter);
+    sounds.setAdapter(nativeAdapter);
   }
 
   private void bindViews(View root) {
