@@ -97,7 +97,7 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    View root = inflater.inflate(R.layout.sounds_fragment, container, false);
+    View root = inflater.inflate(onlyFavorites ? R.layout.favorites_fragment : R.layout.sounds_fragment, container, false);
 
     realm = Realm.getDefaultInstance();
 
