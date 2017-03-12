@@ -4,15 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.monirapps.boiteabaptiste.Config;
-import com.monirapps.boiteabaptiste.Sound;
-import com.monirapps.boiteabaptiste.SoundsFragment;
+import com.monirapps.boiteabaptiste.bo.Config;
+import com.monirapps.boiteabaptiste.bo.Sound;
+import com.monirapps.boiteabaptiste.fragment.SoundsFragment;
+import com.monirapps.boiteabaptiste.bo.SoundBox;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import io.realm.Realm;
 import okhttp3.ResponseBody;
@@ -32,6 +33,8 @@ public enum BoiteServices {
 
   public static final String BASE_URL = "http://david-fournier.fr/boite/";
 
+  public static final String SUFFIX = "baptiste/";
+
   private RESTApi restApi;
 
   BoiteServices() {
@@ -44,6 +47,10 @@ public enum BoiteServices {
 
   public Call<Config> getConfig(){
     return restApi.getConfig();
+  }
+
+  public Call<List<SoundBox>> getBoxes(){
+    return restApi.getBoxes();
   }
 
   public void downloadSound(final Context context, final String id, final String soundPath) {

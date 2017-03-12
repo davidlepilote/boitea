@@ -1,6 +1,9 @@
 package com.monirapps.boiteabaptiste.ws;
 
-import com.monirapps.boiteabaptiste.Config;
+import com.monirapps.boiteabaptiste.bo.Config;
+import com.monirapps.boiteabaptiste.bo.SoundBox;
+
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -13,9 +16,12 @@ import retrofit2.http.Path;
 
 public interface RESTApi {
 
-  @GET("config")
+  @GET(BoiteServices.SUFFIX + "config")
   Call<Config> getConfig();
 
-  @GET("sounds/{soundName}")
+  @GET(BoiteServices.SUFFIX + "sounds/{soundName}")
   Call<ResponseBody> getSound(@Path("soundName") String soundName);
+
+  @GET("boxes")
+  Call<List<SoundBox>> getBoxes();
 }

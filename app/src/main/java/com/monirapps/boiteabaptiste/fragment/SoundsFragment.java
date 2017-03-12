@@ -1,12 +1,9 @@
-package com.monirapps.boiteabaptiste;
+package com.monirapps.boiteabaptiste.fragment;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.AssetFileDescriptor;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,19 +15,17 @@ import android.view.ViewGroup;
 import com.adincube.sdk.nativead.NativeAdViewBinding;
 import com.adincube.sdk.nativead.recycler.NativeAdRecyclerViewAdapter;
 import com.adincube.sdk.nativead.stream.NativeAdStreamPositions;
-import com.google.gson.Gson;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import com.monirapps.boiteabaptiste.BoiteRecyclerView;
+import com.monirapps.boiteabaptiste.MainActivity;
+import com.monirapps.boiteabaptiste.R;
+import com.monirapps.boiteabaptiste.SortStyle;
+import com.monirapps.boiteabaptiste.adapter.SoundsAdapter;
+import com.monirapps.boiteabaptiste.bo.Sound;
 
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.Realm;
 import io.realm.RealmBasedRecyclerViewAdapter;
-import io.realm.RealmChangeListener;
 import io.realm.RealmQuery;
-import io.realm.RealmResults;
-import io.realm.Sort;
 
 public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefreshListener {
 
@@ -102,25 +97,6 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
     realm = Realm.getDefaultInstance();
 
     bindViews(root);
-
-    realm.where(Config.class).findAll().addChangeListener(new RealmChangeListener<RealmResults<Config>>() {
-      @Override
-      public void onChange(RealmResults<Config> element) {
-        if (element.size() > 0) {
-          if (soundsAdapter != null) {
-            soundsAdapter.notifyDataSetChanged();
-          }
-        }
-      }
-    });
-
-    // We make sure here that if there is a config, the loading WILL stop (bug in Realm Listener ?)
-    final Config config = realm.where(Config.class).findFirst();
-    if (config != null) {
-      if (soundsAdapter != null) {
-        soundsAdapter.notifyDataSetChanged();
-      }
-    }
 
     refreshList();
 

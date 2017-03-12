@@ -1,9 +1,4 @@
-package com.monirapps.boiteabaptiste;
-
-import android.support.v7.widget.RecyclerView;
-
-import java.util.HashMap;
-import java.util.Map;
+package com.monirapps.boiteabaptiste.bo;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

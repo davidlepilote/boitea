@@ -24,18 +24,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.gson.Gson;
+import com.monirapps.boiteabaptiste.bo.Config;
+import com.monirapps.boiteabaptiste.bo.Sound;
+import com.monirapps.boiteabaptiste.bo.SoundBox;
+import com.monirapps.boiteabaptiste.fragment.BoxesFragment;
+import com.monirapps.boiteabaptiste.fragment.SoundsFragment;
 import com.monirapps.boiteabaptiste.ws.BoiteServices;
 
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,38 +68,24 @@ public class MainActivity extends AppCompatActivity {
   public static class BoitesPagerAdapter extends FragmentStatePagerAdapter {
 
     private enum FragmentStyle {
-      FAVORITES(0, true, MainActivity.SHOW_SORT_ITEM),
-      SOUNDS(1, false, MainActivity.SHOW_SORT_ITEM),
-      OTHER_BOXES(2, false, MainActivity.HIDE_SORT_ITEM);
-
-      private static Map<Integer, FragmentStyle> lookup = new HashMap<>();
-
-      static {
-        for (FragmentStyle fragmentStyle : FragmentStyle.values()) {
-          lookup.put(fragmentStyle.position, fragmentStyle);
-        }
-      }
-
-      public static FragmentStyle getFromPosition(int position) {
-        return lookup.get(position);
-      }
-
-      final int position;
+      FAVORITES(true, MainActivity.SHOW_SORT_ITEM, "Favoris"),
+      SOUNDS(false, MainActivity.SHOW_SORT_ITEM, "Sons"),
+      OTHER_BOXES(false, MainActivity.HIDE_SORT_ITEM, "Autres boîtes");
 
       final boolean onlyFavorites;
 
       final String sortItemVisibility;
 
-      FragmentStyle(int position, boolean onlyFavorites, String sortItemVisibility) {
-        this.position = position;
+      final String title;
+
+      FragmentStyle(boolean onlyFavorites, String sortItemVisibility, String title) {
         this.onlyFavorites = onlyFavorites;
         this.sortItemVisibility = sortItemVisibility;
+        this.title = title;
       }
     }
 
     private Context context;
-
-    private static String[] titles = new String[]{"Favoris", "Sons", "Autres boîtes"};
 
     public BoitesPagerAdapter(FragmentManager fm, Context context) {
       super(fm);
@@ -109,18 +94,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public Fragment getItem(int position) {
-      final FragmentStyle currentFragmentStyle = FragmentStyle.getFromPosition(position);
-      return SoundsFragment.newInstance(currentFragmentStyle.onlyFavorites);
+      if(position == 2){
+        return BoxesFragment.newInstance();
+      } else {
+        return SoundsFragment.newInstance(FragmentStyle.values()[position].onlyFavorites);
+      }
     }
 
     @Override
     public int getCount() {
-      return titles.length;
+      return FragmentStyle.values().length;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-      return titles[position];
+      return FragmentStyle.values()[position].title;
     }
   }
 
@@ -172,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
       @Override
       public void onPageSelected(int position) {
-        final BoitesPagerAdapter.FragmentStyle currentFragmentStyle = BoitesPagerAdapter.FragmentStyle.getFromPosition(position);
+        final BoitesPagerAdapter.FragmentStyle currentFragmentStyle = BoitesPagerAdapter.FragmentStyle.values()[position];
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(currentFragmentStyle.sortItemVisibility));
       }
 
@@ -252,24 +240,27 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void retrieveConfig() {
+    retrieveOtherBoxes();
     BoiteServices.API.getConfig().enqueue(new Callback<Config>() {
       @Override
       public void onResponse(Call<Config> call, Response<Config> response) {
         final Config config = response.body();
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
-          @Override
-          public void execute(Realm realm) {
-            Config savedConfig = realm.where(Config.class).findFirst();
-            if (savedConfig == null) {
-              realm.copyToRealm(config);
+        if(config != null){
+          Realm realm = Realm.getDefaultInstance();
+          realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+              Config savedConfig = realm.where(Config.class).findFirst();
+              if (savedConfig == null) {
+                realm.copyToRealm(config);
+              }
+              savedConfig = realm.where(Config.class).findFirst();
+              savedConfig.updateConfig(getApplicationContext(), config);
+              endLoading(savedConfig);
             }
-            savedConfig = realm.where(Config.class).findFirst();
-            savedConfig.updateConfig(getApplicationContext(), config);
-            endLoading(savedConfig);
-          }
-        });
-        realm.close();
+          });
+          realm.close();
+        }
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(SoundsFragment.CONFIG_RETRIEVED));
       }
 
@@ -280,21 +271,41 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
+  private void retrieveOtherBoxes(){
+    BoiteServices.API.getBoxes().enqueue(new Callback<List<SoundBox>>() {
+      @Override
+      public void onResponse(Call<List<SoundBox>> call, Response<List<SoundBox>> response) {
+        final List<SoundBox> boxes = response.body();
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+          @Override
+          public void execute(Realm realm) {
+            realm.copyToRealmOrUpdate(boxes);
+          }
+        });
+        realm.close();
+      }
+
+      @Override
+      public void onFailure(Call<List<SoundBox>> call, Throwable t) {
+        t.printStackTrace();
+      }
+    });
+  }
+
   public static void playBaptiste(Context context, String resource) {
     try {
       mediaPlayer.stop();
       mediaPlayer.release();
       mediaPlayer = new MediaPlayer();
-      AssetFileDescriptor descriptor = context.getAssets().openFd(resource);
       mediaPlayer.setDataSource(new FileInputStream(context.getFilesDir() + "/" + resource).getFD());
-      descriptor.close();
-
       mediaPlayer.prepare();
       mediaPlayer.setVolume(1f, 1f);
       mediaPlayer.setLooping(false);
       mediaPlayer.start();
     } catch (Exception e) {
       e.printStackTrace();
+
     }
   }
 

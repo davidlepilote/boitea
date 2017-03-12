@@ -1,4 +1,4 @@
-package com.monirapps.boiteabaptiste;
+package com.monirapps.boiteabaptiste.bo;
 
 import android.content.Context;
 

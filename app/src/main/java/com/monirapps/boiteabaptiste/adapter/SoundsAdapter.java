@@ -1,4 +1,4 @@
-package com.monirapps.boiteabaptiste;
+package com.monirapps.boiteabaptiste.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +10,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.monirapps.boiteabaptiste.MainActivity;
+import com.monirapps.boiteabaptiste.R;
+import com.monirapps.boiteabaptiste.bo.Sound;
+import com.monirapps.boiteabaptiste.fragment.SoundsFragment;
 
 import java.util.Locale;
 
@@ -77,6 +81,7 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
     holder.myClicks.setText(String.format(Locale.FRENCH, "%d", sound.getPersonalHits()));
     holder.totalClicks.setText(String.format(Locale.FRENCH, "%d", sound.getGlobalHits()));
     holder.cardView.setCardBackgroundColor(Color.parseColor(sound.getColor()));
+    holder.cardView.setSoundEffectsEnabled(false);
     holder.cardView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
