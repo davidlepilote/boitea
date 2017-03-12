@@ -2,22 +2,31 @@ package com.monirapps.boiteabaptiste.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ShareCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.monirapps.boiteabaptiste.MainActivity;
 import com.monirapps.boiteabaptiste.R;
 import com.monirapps.boiteabaptiste.bo.Sound;
 import com.monirapps.boiteabaptiste.bo.SoundBox;
 import com.monirapps.boiteabaptiste.fragment.SoundsFragment;
+import com.monirapps.boiteabaptiste.ws.BoiteServices;
 
 import java.util.Locale;
 
@@ -46,28 +55,44 @@ public class BoxesAdapter extends RealmBasedRecyclerViewAdapter<SoundBox, BoxesA
 
     private TextView title;
 
+    private TextView subtitle;
+
+    private ImageView icon;
+
     public SoundBoxViewHolder(View itemView) {
       super(itemView);
       cardView = (CardView) itemView.findViewById(R.id.card_view);
       title = (TextView) itemView.findViewById(R.id.title);
+      subtitle = (TextView) itemView.findViewById(R.id.subtitle);
+      icon = (ImageView) itemView.findViewById(R.id.icon);
     }
   }
 
   @Override
   public SoundBoxViewHolder onCreateRealmViewHolder(ViewGroup parent, int viewType) {
-    return new SoundBoxViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.sound_item, parent, false));
+    return new SoundBoxViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.box_item, parent, false));
   }
 
   @Override
-  public void onBindRealmViewHolder(SoundBoxViewHolder holder, final int position) {
-    final SoundBox sound = data.get(position);
-    holder.title.setText(sound.getTitle());
-    holder.cardView.setCardBackgroundColor(Color.parseColor(sound.getColor()));
+  public void onBindRealmViewHolder(final SoundBoxViewHolder holder, final int position) {
+    final SoundBox soundBox = data.get(position);
+    holder.title.setText(soundBox.getTitle());
+    holder.subtitle.setText(soundBox.getSubtitle());
+    Glide.with(getContext()).load(BoiteServices.ICONS_URL + soundBox.getIcon()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.icon) {
+      @Override
+      protected void setResource(Bitmap resource) {
+        RoundedBitmapDrawable circularBitmapDrawable =
+            RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
+        circularBitmapDrawable.setCircular(true);
+        holder.icon.setImageDrawable(circularBitmapDrawable);
+      }
+    });
+    holder.cardView.setCardBackgroundColor(Color.parseColor(soundBox.getColor()));
     holder.cardView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("market://details?id=" + sound.getPackageName()));
+        intent.setData(Uri.parse("market://details?id=" + soundBox.getPackageName()));
         getContext().startActivity(intent);
       }
     });
@@ -75,17 +100,21 @@ public class BoxesAdapter extends RealmBasedRecyclerViewAdapter<SoundBox, BoxesA
 
   @Override
   public SoundBoxViewHolder onCreateFooterViewHolder(ViewGroup parent) {
-    return new SoundBoxViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.sound_item, parent, false));
+    return new SoundBoxViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_item, parent, false));
   }
 
   @Override
   public void onBindFooterViewHolder(SoundBoxViewHolder holder, int position) {
-    holder.title.setText("FOOTER");
-    holder.cardView.setCardBackgroundColor(Color.BLACK);
+    holder.cardView.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.footer_background));
     holder.cardView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:boxes@monirapps.com"));
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Suggestion de boîte");
+        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+          getContext().startActivity(intent);
+        }
       }
     });
   }

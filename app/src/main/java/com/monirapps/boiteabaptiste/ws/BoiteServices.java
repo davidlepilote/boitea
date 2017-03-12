@@ -33,6 +33,8 @@ public enum BoiteServices {
 
   public static final String BASE_URL = "http://david-fournier.fr/boite/";
 
+  public static final String ICONS_URL = "http://david-fournier.fr/boite/icons/";
+
   public static final String SUFFIX = "baptiste/";
 
   private RESTApi restApi;

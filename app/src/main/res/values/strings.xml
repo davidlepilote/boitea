@@ -7,4 +7,6 @@
     <string name="sort_by">Trier par</string>
     <string name="adincube_app_key">cef066673ce140cbad53</string>
     <string name="empty_favorites_description">Vous n\'avez pas encore choisi de sons favoris. Cliquez sur les étoiles dans la liste des sons pour les enregistrer ici.</string>
+    <string name="footer_title">Suggérez-nous de nouvelles boîtes !</string>
+    <string name="footer_subtitle">Nous ferons notre possible pour les créer</string>
 </resources>

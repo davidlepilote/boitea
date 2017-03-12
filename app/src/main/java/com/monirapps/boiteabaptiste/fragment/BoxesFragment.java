@@ -26,6 +26,7 @@ import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.Realm;
 import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmQuery;
+import io.realm.Sort;
 
 public class BoxesFragment extends Fragment implements RealmRecyclerView.OnRefreshListener {
 
@@ -83,7 +84,7 @@ public class BoxesFragment extends Fragment implements RealmRecyclerView.OnRefre
 
   private void refreshList() {
     final RealmQuery<SoundBox> data = realm.where(SoundBox.class).notEqualTo("packageName", getContext().getPackageName());
-    boxesAdapter = new BoxesAdapter(getContext(), data.findAll());
+    boxesAdapter = new BoxesAdapter(getContext(), data.findAllSorted("updated", Sort.DESCENDING));
 
     boxes.setOnRefreshListener(this);
     boxes.setAdapter(boxesAdapter);

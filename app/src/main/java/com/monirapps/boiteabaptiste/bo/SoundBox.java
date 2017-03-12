@@ -13,29 +13,39 @@ public class SoundBox extends RealmObject {
 
   private String title;
 
+  private String subtitle;
+
   private String color;
 
   @PrimaryKey
   @SerializedName("package")
   private String packageName;
 
+  private long updated;
+
+  private String icon;
+
   public String getTitle() {
     return title;
   }
 
-  public void setTitle(String title) {
-    this.title = title;
+  public String getSubtitle() {
+    return subtitle;
   }
 
   public String getColor() {
     return color;
   }
 
-  public void setColor(String color) {
-    this.color = color;
-  }
-
   public String getPackageName() {
     return packageName;
+  }
+
+  public long getUpdated() {
+    return updated;
+  }
+
+  public String getIcon() {
+    return icon;
   }
 }
