@@ -2,8 +2,10 @@ package com.monirapps.boiteabaptiste;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -15,6 +17,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
   public static final String SHOW_SORT_ITEM = "show sort item";
   public static final String HIDE_SORT_ITEM = "hide sort item";
+  public static final String SORTING_STYLE = "sorting style";
 
   private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
     @Override
@@ -59,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
   public static class BoitesPagerAdapter extends FragmentStatePagerAdapter {
 
     private enum FragmentStyle {
-      FAVORITES(0, true, MainActivity.HIDE_SORT_ITEM),
+      FAVORITES(0, true, MainActivity.SHOW_SORT_ITEM),
       SOUNDS(1, false, MainActivity.SHOW_SORT_ITEM),
       OTHER_BOXES(2, false, MainActivity.HIDE_SORT_ITEM);
 
@@ -195,10 +199,33 @@ public class MainActivity extends AppCompatActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.sort:
+        showSortDialog();
         return true;
       default:
         return super.onOptionsItemSelected(item);
     }
+  }
+
+  private void showSortDialog() {
+    AlertDialog levelDialog;
+
+    final CharSequence[] items = SortStyle.getTitles();
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setTitle(R.string.sort_by);
+    final SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+    final int chosenStyle = preferences.getInt(SORTING_STYLE, 0);
+    builder.setSingleChoiceItems(items, chosenStyle, new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int item) {
+        final SortStyle sortingStyle = SortStyle.getByPosition(item);
+        preferences.edit().putInt(SORTING_STYLE, sortingStyle.position).commit();
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(SoundsFragment.REFRESH_LIST));
+        dialog.dismiss();
+      }
+    });
+    levelDialog = builder.create();
+    levelDialog.show();
+
   }
 
   private void endLoading(Config config) {

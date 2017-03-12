@@ -91,6 +91,7 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
           }
         });
         realm.close();
+        notifyDataSetChanged();
       }
     });
     holder.favorite.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +106,7 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
           }
         });
         realm.close();
+        notifyDataSetChanged();
       }
     });
   }
