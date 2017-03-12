@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -15,6 +17,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -23,7 +27,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.monirapps.boiteabaptiste.bo.Config;
 import com.monirapps.boiteabaptiste.bo.Sound;
 import com.monirapps.boiteabaptiste.bo.SoundBox;
@@ -122,6 +130,12 @@ public class MainActivity extends AppCompatActivity {
 
   private ActionBar actionBar;
 
+  private Toolbar toolbar;
+
+  private TextView title;
+
+  private ImageView icon;
+
   private MenuItem sortItem;
 
   private Realm realm;
@@ -214,12 +228,24 @@ public class MainActivity extends AppCompatActivity {
 
   private void endLoading(Config config) {
     loader.setVisibility(View.GONE);
-    if (config.getTitle() != null) {
-      actionBar.setTitle(config.getTitle());
-    }
-    for (Sound sound : config.getSounds()) {
-      if (sound.isSoundDownloaded() == false) {
-        BoiteServices.API.downloadSound(getApplicationContext(), sound.getId(), sound.getSound());
+    if (config != null) {
+      title.setText(config.getTitle());
+      final int color = Color.parseColor(config.getColor());
+      toolbar.setBackgroundColor(color);
+      tabs.setSelectedTabIndicatorColor(color);
+      Glide.with(getApplicationContext()).load(BoiteServices.ICONS_URL + config.getIcon()).asBitmap().centerCrop().into(new BitmapImageViewTarget(icon) {
+        @Override
+        protected void setResource(Bitmap resource) {
+          RoundedBitmapDrawable circularBitmapDrawable =
+              RoundedBitmapDrawableFactory.create(getResources(), resource);
+          circularBitmapDrawable.setCircular(true);
+          icon.setImageDrawable(circularBitmapDrawable);
+        }
+      });
+      for (Sound sound : config.getSounds()) {
+        if (sound.isSoundDownloaded() == false) {
+          BoiteServices.API.downloadSound(getApplicationContext(), sound.getId(), sound.getSound());
+        }
       }
     }
   }
@@ -235,8 +261,12 @@ public class MainActivity extends AppCompatActivity {
     loader = findViewById(R.id.loader);
     pager = (ViewPager) findViewById(R.id.viewpager);
     tabs = (TabLayout) findViewById(R.id.tabs);
-    setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+    title = (TextView) findViewById(R.id.title);
+    icon = (ImageView) findViewById(R.id.icon);
+    toolbar = (Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
     actionBar = getSupportActionBar();
+    actionBar.setDisplayShowTitleEnabled(false);
   }
 
   private void retrieveConfig() {

@@ -26,6 +26,8 @@ public class Config extends RealmObject {
 
   private String url;
 
+  private String icon;
+
   private RealmList<Sound> sounds;
 
   public String getTitle() {
@@ -72,11 +74,20 @@ public class Config extends RealmObject {
     this.url = url;
   }
 
+  public String getIcon() {
+    return icon;
+  }
+
+  public void setIcon(String icon) {
+    this.icon = icon;
+  }
+
   public void updateConfig(Context context, final Config newConfig) {
     setTitle(newConfig.getTitle());
     setColor(newConfig.getColor());
     setPackageName(newConfig.getPackageName());
     setUpdated(newConfig.getUpdated());
+    setIcon(newConfig.getIcon());
     setUrl(newConfig.getUrl());
     Realm realm = Realm.getDefaultInstance();
     for (Sound newSound : newConfig.getSounds()) {
