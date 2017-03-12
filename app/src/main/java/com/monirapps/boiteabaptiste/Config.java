@@ -3,6 +3,7 @@ package com.monirapps.boiteabaptiste;
 import android.content.Context;
 
 import com.google.gson.annotations.SerializedName;
+import com.monirapps.boiteabaptiste.ws.BoiteServices;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -15,6 +16,8 @@ import io.realm.RealmObject;
 public class Config extends RealmObject {
 
   private String title;
+
+  private String color;
 
   @SerializedName("package")
   private String packageName;
@@ -41,6 +44,14 @@ public class Config extends RealmObject {
     return url;
   }
 
+  public String getColor() {
+    return color;
+  }
+
+  public void setColor(String color) {
+    this.color = color;
+  }
+
   public RealmList<Sound> getSounds() {
     return sounds;
   }
@@ -61,8 +72,9 @@ public class Config extends RealmObject {
     this.url = url;
   }
 
-  public void updateConfig(Context context, Config newConfig) {
+  public void updateConfig(Context context, final Config newConfig) {
     setTitle(newConfig.getTitle());
+    setColor(newConfig.getColor());
     setPackageName(newConfig.getPackageName());
     setUpdated(newConfig.getUpdated());
     setUrl(newConfig.getUrl());
@@ -70,7 +82,7 @@ public class Config extends RealmObject {
     for (Sound newSound : newConfig.getSounds()) {
       final Sound oldSound = realm.where(Sound.class).equalTo("id", newSound.getId()).findFirst();
       if (oldSound != null) {
-        if (true || oldSound.getUpdated() < newSound.getUpdated()) {
+        if (oldSound.getUpdated() < newSound.getUpdated()) {
           oldSound.setUpdated(newSound.getUpdated());
           oldSound.setTitle(newSound.getTitle());
           oldSound.setColor(newSound.getColor());

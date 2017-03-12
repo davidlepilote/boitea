@@ -40,6 +40,8 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
 
   public static final String SET_CHANGED = "set changed";
 
+  public static final String CONFIG_RETRIEVED = "config retrieved";
+
   private BoiteRecyclerView sounds;
 
   private RealmBasedRecyclerViewAdapter soundsAdapter;
@@ -57,7 +59,11 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
         refreshList();
       }
       if (SET_CHANGED.equals(intent.getAction())){
-        nativeAdapter.notifyDataSetChanged();
+        soundsAdapter.notifyDataSetChanged();
+      }
+      if (CONFIG_RETRIEVED.equals(intent.getAction())){
+        sounds.setRefreshing(false);
+        soundsAdapter.notifyDataSetChanged();
       }
     }
   };
@@ -77,6 +83,7 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(REFRESH_LIST);
     intentFilter.addAction(SET_CHANGED);
+    intentFilter.addAction(CONFIG_RETRIEVED);
     LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver, intentFilter);
   }
 
@@ -138,8 +145,8 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
         .build();
 
     NativeAdStreamPositions positions = new NativeAdStreamPositions.Builder()
-        .withPredefinedPositions(0) // position starts at 0.
-        .withRepeatFrequency(1)
+        .withPredefinedPositions(2) // position starts at 0.
+        .withRepeatFrequency(4)
         .build();
 
     nativeAdapter = new NativeAdRecyclerViewAdapter<SoundsAdapter.SoundViewHolder>(getContext(), soundsAdapter, binding, positions);
@@ -161,6 +168,6 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
 
   @Override
   public void onRefresh() {
-
+    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent(MainActivity.REFRESH_CONFIG));
   }
 }

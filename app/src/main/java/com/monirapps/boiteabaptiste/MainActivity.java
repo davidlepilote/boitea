@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.gson.Gson;
+import com.monirapps.boiteabaptiste.ws.BoiteServices;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,30 +33,35 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.Realm;
-import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
   public static final String SHOW_SORT_ITEM = "show sort item";
   public static final String HIDE_SORT_ITEM = "hide sort item";
   public static final String SORTING_STYLE = "sorting style";
+  public static final String REFRESH_CONFIG = "sorting style";
 
   private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
     @Override
     public void onReceive(Context context, Intent intent) {
-      if(SHOW_SORT_ITEM.equals(intent.getAction())){
+      if (SHOW_SORT_ITEM.equals(intent.getAction())) {
         if (sortItem != null) {
           sortItem.setVisible(true);
         }
       }
-      if(HIDE_SORT_ITEM.equals(intent.getAction())){
+      if (HIDE_SORT_ITEM.equals(intent.getAction())) {
         if (sortItem != null) {
           sortItem.setVisible(false);
         }
+      }
+      if (REFRESH_CONFIG.equals(intent.getAction())) {
+        retrieveConfig();
       }
     }
   };
@@ -75,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         }
       }
 
-      public static FragmentStyle getFromPosition(int position){
+      public static FragmentStyle getFromPosition(int position) {
         return lookup.get(position);
       }
 
@@ -144,23 +150,14 @@ public class MainActivity extends AppCompatActivity {
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(SHOW_SORT_ITEM);
     intentFilter.addAction(HIDE_SORT_ITEM);
+    intentFilter.addAction(REFRESH_CONFIG);
     LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
 
     realm = Realm.getDefaultInstance();
 
-    realm.where(Config.class).findAll().addChangeListener(new RealmChangeListener<RealmResults<Config>>() {
-      @Override
-      public void onChange(RealmResults<Config> element) {
-        if (element.size() > 0) {
-          final Config config = element.get(0);
-          endLoading(config);
-        }
-      }
-    });
-
     // We make sure here that if there is a config, the loading WILL stop (bug in Realm Listener ?)
     final Config config = realm.where(Config.class).findFirst();
-    if(config != null){
+    if (config != null) {
       endLoading(config);
     }
 
@@ -207,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void showSortDialog() {
-    AlertDialog levelDialog;
+    AlertDialog sortingDialog;
 
     final CharSequence[] items = SortStyle.getTitles();
 
@@ -223,9 +220,8 @@ public class MainActivity extends AppCompatActivity {
         dialog.dismiss();
       }
     });
-    levelDialog = builder.create();
-    levelDialog.show();
-
+    sortingDialog = builder.create();
+    sortingDialog.show();
   }
 
   private void endLoading(Config config) {
@@ -234,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
       actionBar.setTitle(config.getTitle());
     }
     for (Sound sound : config.getSounds()) {
-      if(sound.isSoundDownloaded() == false){
+      if (sound.isSoundDownloaded() == false) {
         BoiteServices.API.downloadSound(getApplicationContext(), sound.getId(), sound.getSound());
       }
     }
@@ -256,32 +252,32 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void retrieveConfig() {
-    new Thread(new Runnable() {
+    BoiteServices.API.getConfig().enqueue(new Callback<Config>() {
       @Override
-      public void run() {
-        try {
-          final InputStreamReader reader = new InputStreamReader(getAssets().open("config"), "UTF-8");
-          final Config config = new Gson().fromJson(reader, Config.class);
-          Realm realm = Realm.getDefaultInstance();
-          realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-              final Config savedConfig = realm.where(Config.class).findFirst();
-              if (savedConfig == null) {
-                realm.copyToRealm(config);
-              } else {
-                if (true || savedConfig.getUpdated() < config.getUpdated()) {
-                  savedConfig.updateConfig(getApplicationContext(), config);
-                }
-              }
+      public void onResponse(Call<Config> call, Response<Config> response) {
+        final Config config = response.body();
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+          @Override
+          public void execute(Realm realm) {
+            Config savedConfig = realm.where(Config.class).findFirst();
+            if (savedConfig == null) {
+              realm.copyToRealm(config);
             }
-          });
-          realm.close();
-        } catch (IOException ioe) {
-          ioe.printStackTrace();
-        }
+            savedConfig = realm.where(Config.class).findFirst();
+            savedConfig.updateConfig(getApplicationContext(), config);
+            endLoading(savedConfig);
+          }
+        });
+        realm.close();
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(SoundsFragment.CONFIG_RETRIEVED));
       }
-    }).start();
+
+      @Override
+      public void onFailure(Call<Config> call, Throwable t) {
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(SoundsFragment.CONFIG_RETRIEVED));
+      }
+    });
   }
 
   public static void playBaptiste(Context context, String resource) {

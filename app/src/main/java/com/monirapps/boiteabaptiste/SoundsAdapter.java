@@ -26,8 +26,6 @@ import io.realm.RealmViewHolder;
 
 public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAdapter.SoundViewHolder> {
 
-  private final Realm realm = Realm.getDefaultInstance();
-
   private final RealmResults<Sound> data;
 
   public SoundsAdapter(Context context, @Nullable RealmResults<Sound> data) {
