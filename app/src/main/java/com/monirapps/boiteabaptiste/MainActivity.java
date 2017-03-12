@@ -1,6 +1,9 @@
 package com.monirapps.boiteabaptiste;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -9,8 +12,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -18,6 +26,8 @@ import com.google.gson.Gson;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.Realm;
@@ -27,7 +37,56 @@ import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
 
+  public static final String SHOW_SORT_ITEM = "show sort item";
+  public static final String HIDE_SORT_ITEM = "hide sort item";
+
+  private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      if(SHOW_SORT_ITEM.equals(intent.getAction())){
+        if (sortItem != null) {
+          sortItem.setVisible(true);
+        }
+      }
+      if(HIDE_SORT_ITEM.equals(intent.getAction())){
+        if (sortItem != null) {
+          sortItem.setVisible(false);
+        }
+      }
+    }
+  };
+
   public static class BoitesPagerAdapter extends FragmentStatePagerAdapter {
+
+    private enum FragmentStyle {
+      FAVORITES(0, true, MainActivity.HIDE_SORT_ITEM),
+      SOUNDS(1, false, MainActivity.SHOW_SORT_ITEM),
+      OTHER_BOXES(2, false, MainActivity.HIDE_SORT_ITEM);
+
+      private static Map<Integer, FragmentStyle> lookup = new HashMap<>();
+
+      static {
+        for (FragmentStyle fragmentStyle : FragmentStyle.values()) {
+          lookup.put(fragmentStyle.position, fragmentStyle);
+        }
+      }
+
+      public static FragmentStyle getFromPosition(int position){
+        return lookup.get(position);
+      }
+
+      final int position;
+
+      final boolean onlyFavorites;
+
+      final String sortItemVisibility;
+
+      FragmentStyle(int position, boolean onlyFavorites, String sortItemVisibility) {
+        this.position = position;
+        this.onlyFavorites = onlyFavorites;
+        this.sortItemVisibility = sortItemVisibility;
+      }
+    }
 
     private Context context;
 
@@ -40,16 +99,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public Fragment getItem(int position) {
-      switch (position){
-        case 0:
-          return SoundsFragment.newInstance(true);
-        case 1:
-          return SoundsFragment.newInstance(false);
-        case 2:
-          return SoundsFragment.newInstance(false);
-        default:
-          return SoundsFragment.newInstance(false);
-      }
+      final FragmentStyle currentFragmentStyle = FragmentStyle.getFromPosition(position);
+      return SoundsFragment.newInstance(currentFragmentStyle.onlyFavorites);
     }
 
     @Override
@@ -71,6 +122,10 @@ public class MainActivity extends AppCompatActivity {
 
   private View loader;
 
+  private ActionBar actionBar;
+
+  private MenuItem sortItem;
+
   private Realm realm;
 
   @Override
@@ -81,6 +136,11 @@ public class MainActivity extends AppCompatActivity {
     setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
     bindViews();
+
+    final IntentFilter intentFilter = new IntentFilter();
+    intentFilter.addAction(SHOW_SORT_ITEM);
+    intentFilter.addAction(HIDE_SORT_ITEM);
+    LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
 
     realm = Realm.getDefaultInstance();
 
@@ -103,14 +163,48 @@ public class MainActivity extends AppCompatActivity {
     pager.setAdapter(new BoitesPagerAdapter(getSupportFragmentManager(), getApplicationContext()));
     tabs.setupWithViewPager(pager);
     pager.setCurrentItem(1);
+    pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+      @Override
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+      }
+
+      @Override
+      public void onPageSelected(int position) {
+        final BoitesPagerAdapter.FragmentStyle currentFragmentStyle = BoitesPagerAdapter.FragmentStyle.getFromPosition(position);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(currentFragmentStyle.sortItemVisibility));
+      }
+
+      @Override
+      public void onPageScrollStateChanged(int state) {
+
+      }
+    });
 
     retrieveConfig();
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+    sortItem = menu.findItem(R.id.sort);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.sort:
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 
   private void endLoading(Config config) {
     loader.setVisibility(View.GONE);
     if (config.getTitle() != null) {
-      getSupportActionBar().setTitle(config.getTitle());
+      actionBar.setTitle(config.getTitle());
     }
     for (Sound sound : config.getSounds()) {
       if(sound.isSoundDownloaded() == false){
@@ -123,12 +217,15 @@ public class MainActivity extends AppCompatActivity {
   protected void onDestroy() {
     super.onDestroy();
     realm.close();
+    LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
   }
 
   private void bindViews() {
     loader = findViewById(R.id.loader);
     pager = (ViewPager) findViewById(R.id.viewpager);
     tabs = (TabLayout) findViewById(R.id.tabs);
+    setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+    actionBar = getSupportActionBar();
   }
 
   private void retrieveConfig() {
