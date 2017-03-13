@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.google.firebase.crash.FirebaseCrash;
+import com.immersion.hapticmediasdk.models.HttpUnsuccessfulException;
 import com.monirapps.boiteabaptiste.bo.Config;
 import com.monirapps.boiteabaptiste.bo.Sound;
 import com.monirapps.boiteabaptiste.fragment.SoundsFragment;
@@ -32,8 +34,9 @@ public enum BoiteServices {
   API;
 
   public static final String BASE_URL = "http://david-fournier.fr/boite/";
+  //public static final String BASE_URL = " http://laboitea.api.monirapps.com/";
 
-  public static final String ICONS_URL = "http://david-fournier.fr/boite/icons/";
+  public static final String ICONS_URL = BASE_URL + "icons/";
 
   public static final String SUFFIX = "baptiste/";
 
@@ -55,29 +58,49 @@ public enum BoiteServices {
     return restApi.getBoxes();
   }
 
-  public void downloadSound(final Context context, final String id, final String soundPath) {
-    restApi.getSound(soundPath).enqueue(new Callback<ResponseBody>() {
+  public void hit(final String id){
+    restApi.hit(id).enqueue(new Callback<ResponseBody>() {
       @Override
       public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-        final InputStream fileSound = response.body().byteStream();
-        copyInputStreamToFile(fileSound, new File(context.getFilesDir() + "/" + soundPath));
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
-          @Override
-          public void execute(Realm realm) {
-            final Sound sound = realm.where(Sound.class).equalTo("id", id).findFirst();
-            if (sound != null) {
-              sound.setSoundDownloaded(true);
-            }
-            LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(SoundsFragment.REFRESH_LIST));
-          }
-        });
-        realm.close();
+        if(!response.isSuccessful()){
+          FirebaseCrash.report(new HttpUnsuccessfulException(response.code(), "Hit on " + id + " failed"));
+        }
       }
 
       @Override
       public void onFailure(Call<ResponseBody> call, Throwable t) {
+        FirebaseCrash.report(t);
+      }
+    });
+  }
 
+  public void downloadSound(final Context context, final String id, final String soundPath) {
+    restApi.getSound(soundPath).enqueue(new Callback<ResponseBody>() {
+      @Override
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        if(response.isSuccessful()){
+          final InputStream fileSound = response.body().byteStream();
+          copyInputStreamToFile(fileSound, new File(context.getFilesDir() + "/" + soundPath));
+          Realm realm = Realm.getDefaultInstance();
+          realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+              final Sound sound = realm.where(Sound.class).equalTo("id", id).findFirst();
+              if (sound != null) {
+                sound.setSoundDownloaded(true);
+              }
+              LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(SoundsFragment.REFRESH_LIST));
+            }
+          });
+          realm.close();
+        } else {
+          FirebaseCrash.report(new HttpUnsuccessfulException(response.code(), "Sound " + soundPath + " not downloaded"));
+        }
+      }
+
+      @Override
+      public void onFailure(Call<ResponseBody> call, Throwable t) {
+        FirebaseCrash.report(t);
       }
     });
   }

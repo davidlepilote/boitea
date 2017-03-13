@@ -19,11 +19,14 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.view.LayoutInflaterCompat;
+import android.support.v4.view.LayoutInflaterFactory;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -142,7 +145,21 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    LayoutInflaterCompat.setFactory(getLayoutInflater(), new LayoutInflaterFactory() {
+      @Override
+      public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+        if("TextView".equals(name)){
+          TextView textView = new TextView(context, attrs);
+          textView.setTypeface(Typefaces.MONTSERRAT.typeface(context));
+          return textView;
+        } else {
+          return null;
+        }
+      }
+    });
+
     super.onCreate(savedInstanceState);
+
     setContentView(R.layout.activity_main);
 
     setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -230,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
     loader.setVisibility(View.GONE);
     if (config != null) {
       title.setText(config.getTitle());
+      title.setTypeface(Typefaces.GROBOLD.typeface(getApplicationContext()));
       final int color = Color.parseColor(config.getColor());
       toolbar.setBackgroundColor(color);
       tabs.setSelectedTabIndicatorColor(color);

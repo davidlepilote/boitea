@@ -3,6 +3,7 @@ package com.monirapps.boiteabaptiste.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
@@ -12,10 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.monirapps.boiteabaptiste.MainActivity;
 import com.monirapps.boiteabaptiste.R;
+import com.monirapps.boiteabaptiste.Typefaces;
 import com.monirapps.boiteabaptiste.bo.Sound;
 import com.monirapps.boiteabaptiste.fragment.SoundsFragment;
+import com.monirapps.boiteabaptiste.ws.BoiteServices;
 
 import java.util.Locale;
 
@@ -32,8 +36,11 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
 
   private final RealmResults<Sound> data;
 
+  private final FirebaseAnalytics firebaseAnalytics;
+
   public SoundsAdapter(Context context, @Nullable RealmResults<Sound> data) {
     super(context, data, true, true);
+    firebaseAnalytics = FirebaseAnalytics.getInstance(context);
     this.data = data;
   }
 
@@ -71,12 +78,14 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
   public void onBindRealmViewHolder(SoundViewHolder holder, final int position) {
     final Sound sound = data.get(position);
     holder.title.setText(sound.getTitle());
+    holder.title.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
     if(TextUtils.isEmpty(sound.getSubtitle()) == false){
       holder.subtitle.setText(sound.getSubtitle());
       holder.subtitle.setVisibility(View.VISIBLE);
     } else {
       holder.subtitle.setVisibility(View.GONE);
     }
+    holder.subtitle.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
     holder.favorite.setSelected(sound.isFavorite());
     holder.myClicks.setText(String.format(Locale.FRENCH, "%d", sound.getPersonalHits()));
     holder.totalClicks.setText(String.format(Locale.FRENCH, "%d", sound.getGlobalHits()));
@@ -86,6 +95,10 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
       @Override
       public void onClick(View view) {
         MainActivity.playBaptiste(view.getContext(), sound.getSound());
+        BoiteServices.API.hit(sound.getId());
+        final Bundle data = new Bundle();
+        data.putString("ID", sound.getId());
+        firebaseAnalytics.logEvent("HIT", data);
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(new Realm.Transaction() {
           @Override

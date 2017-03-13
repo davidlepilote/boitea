@@ -9,6 +9,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by David et Monireh on 12/03/2017.
@@ -16,12 +17,15 @@ import retrofit2.http.Path;
 
 public interface RESTApi {
 
-  @GET(BoiteServices.SUFFIX + "config")
+  @GET(BoiteServices.SUFFIX + "config.json")
   Call<Config> getConfig();
 
   @GET(BoiteServices.SUFFIX + "sounds/{soundName}")
   Call<ResponseBody> getSound(@Path("soundName") String soundName);
 
-  @GET("boxes")
+  @GET("boxes.json")
   Call<List<SoundBox>> getBoxes();
+
+  @GET("hit.php")
+  Call<ResponseBody> hit(@Query("id") String id);
 }

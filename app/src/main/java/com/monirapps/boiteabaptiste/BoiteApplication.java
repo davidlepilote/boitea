@@ -6,6 +6,7 @@ import android.media.AudioManager;
 import android.support.multidex.MultiDexApplication;
 
 import com.adincube.sdk.AdinCube;
+import com.onesignal.OneSignal;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -27,5 +28,7 @@ public class BoiteApplication extends MultiDexApplication {
     Realm.setDefaultConfiguration(realmConfiguration);
 
     AdinCube.setAppKey(getString(R.string.adincube_app_key));
+
+    OneSignal.startInit(this).init();
   }
 }

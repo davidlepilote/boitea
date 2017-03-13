@@ -113,7 +113,7 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
 
     NativeAdViewBinding binding = new NativeAdViewBinding.Builder(R.layout.native_ad_item)
         .withTitleViewId(R.id.title)
-        .withCallToActionViewId(R.id.callToAction)
+        .withCallToActionViewId(R.id.cta)
         .withDescriptionViewId(R.id.description)
         .withRatingViewId(R.id.rating)
         .withIconViewId(R.id.icon)

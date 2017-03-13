@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.monirapps.boiteabaptiste.MainActivity;
 import com.monirapps.boiteabaptiste.R;
+import com.monirapps.boiteabaptiste.Typefaces;
 import com.monirapps.boiteabaptiste.bo.Sound;
 import com.monirapps.boiteabaptiste.bo.SoundBox;
 import com.monirapps.boiteabaptiste.fragment.SoundsFragment;
@@ -77,7 +78,9 @@ public class BoxesAdapter extends RealmBasedRecyclerViewAdapter<SoundBox, BoxesA
   public void onBindRealmViewHolder(final SoundBoxViewHolder holder, final int position) {
     final SoundBox soundBox = data.get(position);
     holder.title.setText(soundBox.getTitle());
+    holder.title.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
     holder.subtitle.setText(soundBox.getSubtitle());
+    holder.subtitle.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
     Glide.with(getContext()).load(BoiteServices.ICONS_URL + soundBox.getIcon()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.icon) {
       @Override
       protected void setResource(Bitmap resource) {

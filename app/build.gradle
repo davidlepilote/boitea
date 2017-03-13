@@ -12,6 +12,8 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        manifestPlaceholders = [onesignal_app_id: "0c83bb31-8f67-4d35-b38c-36f4d7fa5bf3",
+                                onesignal_google_project_number: "159501689108"]
     }
     buildTypes {
         release {
@@ -42,6 +44,7 @@ dependencies {
     //ADINCUBE
     compile ('com.adincube.sdk:AdinCube-Java-6fbf:1.+@aar') {
         transitive = true
+        exclude group: 'com.google.android.gms'
     }
     compile('com.adincube.sdk:AdinCube-Native-RecyclerView-Extension:1.+') {
         transitive = true
@@ -53,5 +56,15 @@ dependencies {
     //GLIDE
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
+    //FIREBASE
+    compile 'com.google.firebase:firebase-core:10.0.1'
+    compile 'com.google.firebase:firebase-crash:10.0.1'
+
+    //ONE SIGNAL/
+    compile 'com.onesignal:OneSignal:3.4.3@aar'
+    compile 'com.google.android.gms:play-services-gcm:10.0.1'
+
     testCompile 'junit:junit:4.12'
 }
+
+apply plugin: 'com.google.gms.google-services'

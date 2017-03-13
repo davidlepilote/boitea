@@ -14,18 +14,23 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:foreground="?android:attr/selectableItemBackground"
-        card_view:cardCornerRadius="10dp"
+        card_view:cardCornerRadius="8dp"
         card_view:cardElevation="4dp"
-        card_view:contentPadding="8dp"
+        card_view:contentPaddingBottom="7dp"
+        card_view:contentPaddingTop="10dp"
+        card_view:contentPaddingLeft="18dp"
+        card_view:contentPaddingRight="18dp"
+        android:clipToPadding="false"
         >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="4dp"
-            android:background="@drawable/background"
             >
 
             <LinearLayout
@@ -38,7 +43,7 @@
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_marginBottom="3dp"
                     android:gravity="center"
                     android:textColor="@color/sound_text_color"
                     android:textSize="20dp"
@@ -50,8 +55,7 @@
                     android:id="@+id/subtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
+                    android:layout_marginBottom="3dp"
                     android:textColor="@color/sound_text_color"
                     android:textSize="16dp"
                     android:visibility="gone"
