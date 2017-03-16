@@ -17,10 +17,10 @@ import retrofit2.http.Query;
 
 public interface RESTApi {
 
-  @GET(BoiteServices.SUFFIX + "config")
+  @GET(BoiteServices.SUFFIX + "/config")
   Call<Config> getConfig();
 
-  @GET(BoiteServices.SUFFIX + "sounds/{soundName}")
+  @GET(BoiteServices.SUFFIX + "/sounds/{soundName}")
   Call<ResponseBody> getSound(@Path("soundName") String soundName);
 
   @GET("boxes")

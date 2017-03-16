@@ -5,20 +5,31 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
     defaultConfig {
-        applicationId "com.monirapps.boiteabaptiste"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        manifestPlaceholders = [onesignal_app_id: "0c83bb31-8f67-4d35-b38c-36f4d7fa5bf3",
-                                onesignal_google_project_number: "159501689108"]
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        baptiste {
+            applicationId "com.monirapps.boiteabaptiste"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"baptiste"'
+            manifestPlaceholders = [onesignal_app_id: "0c83bb31-8f67-4d35-b38c-36f4d7fa5bf3",
+                                    onesignal_google_project_number: "159501689108"]
+        }
+        chirac {
+            applicationId "com.monirapps.boiteachirac"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"chirac"'
+            manifestPlaceholders = [onesignal_app_id: "099eecde-50a5-4fed-ab0b-b7027c5d0952",
+                                    onesignal_google_project_number: "1055980942161"]
         }
     }
 }

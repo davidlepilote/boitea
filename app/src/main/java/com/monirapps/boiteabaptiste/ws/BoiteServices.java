@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.firebase.crash.FirebaseCrash;
+import com.monirapps.boiteabaptiste.BuildConfig;
 import com.monirapps.boiteabaptiste.bo.Config;
 import com.monirapps.boiteabaptiste.bo.Sound;
 import com.monirapps.boiteabaptiste.fragment.SoundsFragment;
@@ -38,7 +39,7 @@ public enum BoiteServices {
 
   public static final String ICONS_URL = BASE_URL + "icons/";
 
-  public static final String SUFFIX = "baptiste/";
+  public static final String SUFFIX = BuildConfig.ENDPOINT_SUFFIX;
 
   private RESTApi restApi;
 
