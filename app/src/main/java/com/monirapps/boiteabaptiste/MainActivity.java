@@ -16,6 +16,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -145,18 +146,18 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    LayoutInflaterCompat.setFactory(getLayoutInflater(), new LayoutInflaterFactory() {
-      @Override
-      public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        if("TextView".equals(name)){
-          TextView textView = new TextView(context, attrs);
-          textView.setTypeface(Typefaces.MONTSERRAT.typeface(context));
-          return textView;
-        } else {
-          return null;
-        }
-      }
-    });
+//    LayoutInflaterCompat.setFactory(getLayoutInflater(), new LayoutInflaterFactory() {
+//      @Override
+//      public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+//        if("TextView".equals(name)){
+//          TextView textView = new TextView(context, attrs);
+//          textView.setTypeface(Typefaces.MONTSERRAT.typeface(context));
+//          return textView;
+//        } else {
+//          return null;
+//        }
+//      }
+//    });
 
     super.onCreate(savedInstanceState);
 
@@ -250,7 +251,9 @@ public class MainActivity extends AppCompatActivity {
       title.setTypeface(Typefaces.GROBOLD.typeface(getApplicationContext()));
       final int color = Color.parseColor(config.getColor());
       toolbar.setBackgroundColor(color);
+      tabs.setTabTextColors(ContextCompat.getColor(getApplicationContext(), R.color.footer_background), color);
       tabs.setSelectedTabIndicatorColor(color);
+      //Glide.with(getApplicationContext()).load(BoiteServices.ICONS_URL + config.getIcon()).asBitmap().centerCrop().into(icon);
       Glide.with(getApplicationContext()).load(BoiteServices.ICONS_URL + config.getIcon()).asBitmap().centerCrop().into(new BitmapImageViewTarget(icon) {
         @Override
         protected void setResource(Bitmap resource) {

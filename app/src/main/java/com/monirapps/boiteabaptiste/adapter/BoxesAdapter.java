@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.google.firebase.crash.FirebaseCrash;
 import com.monirapps.boiteabaptiste.MainActivity;
 import com.monirapps.boiteabaptiste.R;
 import com.monirapps.boiteabaptiste.Typefaces;
@@ -77,28 +78,36 @@ public class BoxesAdapter extends RealmBasedRecyclerViewAdapter<SoundBox, BoxesA
   @Override
   public void onBindRealmViewHolder(final SoundBoxViewHolder holder, final int position) {
     final SoundBox soundBox = data.get(position);
-    holder.title.setText(soundBox.getTitle());
-    holder.title.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
-    holder.subtitle.setText(soundBox.getSubtitle());
-    holder.subtitle.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
-    Glide.with(getContext()).load(BoiteServices.ICONS_URL + soundBox.getIcon()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.icon) {
-      @Override
-      protected void setResource(Bitmap resource) {
-        RoundedBitmapDrawable circularBitmapDrawable =
-            RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
-        circularBitmapDrawable.setCircular(true);
-        holder.icon.setImageDrawable(circularBitmapDrawable);
+    try {
+      holder.title.setText(soundBox.getTitle());
+      holder.title.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
+      holder.subtitle.setText(soundBox.getSubtitle());
+      holder.subtitle.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
+      Glide.with(getContext()).load(BoiteServices.ICONS_URL + soundBox.getIcon()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.icon) {
+        @Override
+        protected void setResource(Bitmap resource) {
+          RoundedBitmapDrawable circularBitmapDrawable =
+              RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
+          circularBitmapDrawable.setCircular(true);
+          holder.icon.setImageDrawable(circularBitmapDrawable);
+        }
+      });
+      try {
+        holder.cardView.setCardBackgroundColor(Color.parseColor(soundBox.getColor()));
+      } catch (IllegalArgumentException exception) {
+        FirebaseCrash.report(new IllegalArgumentException("Color not parseable : " + soundBox.getColor(), exception));
       }
-    });
-    holder.cardView.setCardBackgroundColor(Color.parseColor(soundBox.getColor()));
-    holder.cardView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("market://details?id=" + soundBox.getPackageName()));
-        getContext().startActivity(intent);
-      }
-    });
+      holder.cardView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          Intent intent = new Intent(Intent.ACTION_VIEW);
+          intent.setData(Uri.parse("market://details?id=" + soundBox.getPackageName()));
+          getContext().startActivity(intent);
+        }
+      });
+    } catch (NullPointerException exception) {
+      FirebaseCrash.report(new NullPointerException("soundbox has a problem of null field : " + soundBox.getPackageName()));
+    }
   }
 
   @Override

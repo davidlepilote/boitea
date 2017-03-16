@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.firebase.crash.FirebaseCrash;
-import com.immersion.hapticmediasdk.models.HttpUnsuccessfulException;
 import com.monirapps.boiteabaptiste.bo.Config;
 import com.monirapps.boiteabaptiste.bo.Sound;
 import com.monirapps.boiteabaptiste.fragment.SoundsFragment;
@@ -15,6 +14,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import io.realm.Realm;
@@ -63,7 +63,7 @@ public enum BoiteServices {
       @Override
       public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         if(!response.isSuccessful()){
-          FirebaseCrash.report(new HttpUnsuccessfulException(response.code(), "Hit on " + id + " failed"));
+          FirebaseCrash.report(new IllegalArgumentException(response.code() + ": Hit on " + id + " failed"));
         }
       }
 
@@ -94,7 +94,7 @@ public enum BoiteServices {
           });
           realm.close();
         } else {
-          FirebaseCrash.report(new HttpUnsuccessfulException(response.code(), "Sound " + soundPath + " not downloaded"));
+          FirebaseCrash.report(new IllegalArgumentException(response.code() + " : Sound " + soundPath + " not downloaded"));
         }
       }
 

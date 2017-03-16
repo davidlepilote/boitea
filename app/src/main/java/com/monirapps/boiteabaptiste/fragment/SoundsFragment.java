@@ -54,7 +54,9 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
         refreshList();
       }
       if (SET_CHANGED.equals(intent.getAction())){
-        soundsAdapter.notifyDataSetChanged();
+        if(!onlyFavorites && !getUserVisibleHint()){
+          soundsAdapter.notifyDataSetChanged();
+        }
       }
       if (CONFIG_RETRIEVED.equals(intent.getAction())){
         sounds.setRefreshing(false);
@@ -140,6 +142,12 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
   public void onDestroy() {
     super.onDestroy();
     LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(broadcastReceiver);
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    nativeAdapter.refreshAds();
   }
 
   @Override

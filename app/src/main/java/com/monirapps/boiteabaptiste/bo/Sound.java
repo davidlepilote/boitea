@@ -9,38 +9,6 @@ import io.realm.annotations.PrimaryKey;
 
 public class Sound extends RealmObject implements Comparable<Sound> {
 
-//  @Override
-//  public int compareTo(Sound baptiste) {
-//    return this.description.compareTo(baptiste.description);
-//  }
-//
-//  public enum Person {
-//    BAPTISTE(R.color.baptiste, "bap"),
-//    MAMAN(R.color.mere, "mere"),
-//    FRERE(R.color.frere, "frere");
-//
-//    public final int color;
-//
-//    public final String person;
-//
-//    Person(int color, String person) {
-//      this.color = color;
-//      this.person = person;
-//    }
-//
-//    private static Map<String, Person> lookup = new HashMap<>();
-//
-//    static{
-//      for (Person person : Person.values()) {
-//        lookup.put(person.person, person);
-//      }
-//    }
-//
-//    public static Person lookup(String person){
-//      return lookup.get(person);
-//    }
-//  }
-
   @PrimaryKey
   private String id;
 

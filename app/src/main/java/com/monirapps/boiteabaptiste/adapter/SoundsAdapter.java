@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.monirapps.boiteabaptiste.MainActivity;
 import com.monirapps.boiteabaptiste.R;
@@ -33,6 +34,8 @@ import io.realm.RealmViewHolder;
  */
 
 public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAdapter.SoundViewHolder> {
+
+  public static final String POSITION = "position";
 
   private final RealmResults<Sound> data;
 
@@ -56,7 +59,7 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
 
     private TextView myClicks;
 
-    private View favorite;
+    private LottieAnimationView favorite;
 
     public SoundViewHolder(View itemView) {
       super(itemView);
@@ -65,7 +68,7 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
       subtitle = (TextView) itemView.findViewById(R.id.subtitle);
       totalClicks = (TextView) itemView.findViewById(R.id.total_clicks_number);
       myClicks = (TextView) itemView.findViewById(R.id.my_clicks_number);
-      favorite = itemView.findViewById(R.id.favorite);
+      favorite = (LottieAnimationView) itemView.findViewById(R.id.favorite);
     }
   }
 
@@ -75,7 +78,7 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
   }
 
   @Override
-  public void onBindRealmViewHolder(SoundViewHolder holder, final int position) {
+  public void onBindRealmViewHolder(final SoundViewHolder holder, final int position) {
     final Sound sound = data.get(position);
     holder.title.setText(sound.getTitle());
     holder.title.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
@@ -86,7 +89,7 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
       holder.subtitle.setVisibility(View.GONE);
     }
     holder.subtitle.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
-    holder.favorite.setSelected(sound.isFavorite());
+    holder.favorite.setProgress(sound.isFavorite() ? 1f : 0f);
     holder.myClicks.setText(String.format(Locale.FRENCH, "%d", sound.getPersonalHits()));
     holder.totalClicks.setText(String.format(Locale.FRENCH, "%d", sound.getGlobalHits()));
     holder.cardView.setCardBackgroundColor(Color.parseColor(sound.getColor()));
@@ -115,16 +118,21 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
     holder.favorite.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(final View view) {
-        view.setSelected(!view.isSelected());
+        holder.favorite.cancelAnimation();
+        holder.favorite.setProgress(0f);
+        if(!sound.isFavorite()){
+          holder.favorite.playAnimation();
+        } else {
+          LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent(SoundsFragment.SET_CHANGED).putExtra(POSITION, position));
+        }
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(new Realm.Transaction() {
           @Override
           public void execute(Realm realm) {
-            realm.where(Sound.class).equalTo("id", sound.getId()).findFirst().setFavorite(view.isSelected());
+            realm.where(Sound.class).equalTo("id", sound.getId()).findFirst().setFavorite(!sound.isFavorite());
           }
         });
         realm.close();
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent(SoundsFragment.SET_CHANGED));
       }
     });
   }
