@@ -1,4 +1,4 @@
-package com.monirapps.boiteabaptiste.adapter;
+package com.monirapps.boitea.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,12 +15,12 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.monirapps.boiteabaptiste.MainActivity;
+import com.monirapps.boitea.fragment.SoundsFragment;
+import com.monirapps.boitea.MainActivity;
 import com.monirapps.boiteabaptiste.R;
-import com.monirapps.boiteabaptiste.Typefaces;
-import com.monirapps.boiteabaptiste.bo.Sound;
-import com.monirapps.boiteabaptiste.fragment.SoundsFragment;
-import com.monirapps.boiteabaptiste.ws.BoiteServices;
+import com.monirapps.boitea.Typefaces;
+import com.monirapps.boitea.bo.Sound;
+import com.monirapps.boitea.ws.BoiteServices;
 
 import java.util.Locale;
 

@@ -1,4 +1,4 @@
-package com.monirapps.boiteabaptiste.fragment;
+package com.monirapps.boitea.fragment;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,12 +15,12 @@ import android.view.ViewGroup;
 import com.adincube.sdk.nativead.NativeAdViewBinding;
 import com.adincube.sdk.nativead.recycler.NativeAdRecyclerViewAdapter;
 import com.adincube.sdk.nativead.stream.NativeAdStreamPositions;
-import com.monirapps.boiteabaptiste.BoiteRecyclerView;
-import com.monirapps.boiteabaptiste.MainActivity;
+import com.monirapps.boitea.BoiteRecyclerView;
+import com.monirapps.boitea.MainActivity;
 import com.monirapps.boiteabaptiste.R;
-import com.monirapps.boiteabaptiste.SortStyle;
-import com.monirapps.boiteabaptiste.adapter.SoundsAdapter;
-import com.monirapps.boiteabaptiste.bo.Sound;
+import com.monirapps.boitea.SortStyle;
+import com.monirapps.boitea.adapter.SoundsAdapter;
+import com.monirapps.boitea.bo.Sound;
 
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.Realm;

@@ -1,4 +1,4 @@
-package com.monirapps.boiteabaptiste.adapter;
+package com.monirapps.boitea.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,13 +6,10 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.CardView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,17 +19,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.firebase.crash.FirebaseCrash;
-import com.monirapps.boiteabaptiste.MainActivity;
 import com.monirapps.boiteabaptiste.R;
-import com.monirapps.boiteabaptiste.Typefaces;
-import com.monirapps.boiteabaptiste.bo.Sound;
-import com.monirapps.boiteabaptiste.bo.SoundBox;
-import com.monirapps.boiteabaptiste.fragment.SoundsFragment;
-import com.monirapps.boiteabaptiste.ws.BoiteServices;
+import com.monirapps.boitea.Typefaces;
+import com.monirapps.boitea.bo.SoundBox;
+import com.monirapps.boitea.ws.BoiteServices;
 
-import java.util.Locale;
-
-import io.realm.Realm;
 import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmResults;
 import io.realm.RealmViewHolder;

@@ -1,4 +1,4 @@
-package com.monirapps.boiteabaptiste.bo;
+package com.monirapps.boitea.bo;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

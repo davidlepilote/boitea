@@ -1,4 +1,4 @@
-package com.monirapps.boiteabaptiste;
+package com.monirapps.boitea;
 
 import java.util.HashMap;
 import java.util.Map;

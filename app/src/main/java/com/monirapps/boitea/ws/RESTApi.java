@@ -1,7 +1,7 @@
-package com.monirapps.boiteabaptiste.ws;
+package com.monirapps.boitea.ws;
 
-import com.monirapps.boiteabaptiste.bo.Config;
-import com.monirapps.boiteabaptiste.bo.SoundBox;
+import com.monirapps.boitea.bo.Config;
+import com.monirapps.boitea.bo.SoundBox;
 
 import java.util.List;
 

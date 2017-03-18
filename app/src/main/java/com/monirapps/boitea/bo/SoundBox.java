@@ -1,4 +1,4 @@
-package com.monirapps.boiteabaptiste.bo;
+package com.monirapps.boitea.bo;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -25,6 +25,10 @@ public class SoundBox extends RealmObject {
 
   private String icon;
 
+  private boolean banned;
+
+  private boolean validated;
+
   public String getTitle() {
     return title;
   }
@@ -47,5 +51,13 @@ public class SoundBox extends RealmObject {
 
   public String getIcon() {
     return icon;
+  }
+
+  public boolean isBanned() {
+    return banned;
+  }
+
+  public boolean isValidated() {
+    return validated;
   }
 }

@@ -1,4 +1,4 @@
-package com.monirapps.boiteabaptiste;
+package com.monirapps.boitea;
 
 import android.app.Application;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.media.AudioManager;
 import android.support.multidex.MultiDexApplication;
 
 import com.adincube.sdk.AdinCube;
+import com.monirapps.boiteabaptiste.R;
 import com.onesignal.OneSignal;
 
 import io.realm.Realm;

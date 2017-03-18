@@ -1,4 +1,4 @@
-package com.monirapps.boiteabaptiste;
+package com.monirapps.boitea;
 
 import android.content.Context;
 import android.graphics.Typeface;

@@ -1,9 +1,9 @@
-package com.monirapps.boiteabaptiste.bo;
+package com.monirapps.boitea.bo;
 
 import android.content.Context;
 
 import com.google.gson.annotations.SerializedName;
-import com.monirapps.boiteabaptiste.ws.BoiteServices;
+import com.monirapps.boitea.ws.BoiteServices;
 
 import io.realm.Realm;
 import io.realm.RealmList;

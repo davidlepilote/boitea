@@ -1,4 +1,4 @@
-package com.monirapps.boiteabaptiste;
+package com.monirapps.boitea;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -20,14 +19,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v4.view.LayoutInflaterCompat;
-import android.support.v4.view.LayoutInflaterFactory;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,12 +32,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.monirapps.boiteabaptiste.bo.Config;
-import com.monirapps.boiteabaptiste.bo.Sound;
-import com.monirapps.boiteabaptiste.bo.SoundBox;
-import com.monirapps.boiteabaptiste.fragment.BoxesFragment;
-import com.monirapps.boiteabaptiste.fragment.SoundsFragment;
-import com.monirapps.boiteabaptiste.ws.BoiteServices;
+import com.monirapps.boitea.bo.Config;
+import com.monirapps.boitea.bo.Sound;
+import com.monirapps.boitea.bo.SoundBox;
+import com.monirapps.boitea.fragment.BoxesFragment;
+import com.monirapps.boitea.fragment.SoundsFragment;
+import com.monirapps.boiteabaptiste.R;
+import com.monirapps.boitea.ws.BoiteServices;
 
 import java.io.FileInputStream;
 import java.util.List;

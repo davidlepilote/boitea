@@ -1,21 +1,20 @@
-package com.monirapps.boiteabaptiste.ws;
+package com.monirapps.boitea.ws;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.firebase.crash.FirebaseCrash;
+import com.monirapps.boitea.bo.Config;
+import com.monirapps.boitea.bo.Sound;
+import com.monirapps.boitea.bo.SoundBox;
+import com.monirapps.boitea.fragment.SoundsFragment;
 import com.monirapps.boiteabaptiste.BuildConfig;
-import com.monirapps.boiteabaptiste.bo.Config;
-import com.monirapps.boiteabaptiste.bo.Sound;
-import com.monirapps.boiteabaptiste.fragment.SoundsFragment;
-import com.monirapps.boiteabaptiste.bo.SoundBox;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import io.realm.Realm;

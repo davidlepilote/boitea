@@ -1,4 +1,4 @@
-package com.monirapps.boiteabaptiste.fragment;
+package com.monirapps.boitea.fragment;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,16 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.adincube.sdk.nativead.NativeAdViewBinding;
-import com.adincube.sdk.nativead.recycler.NativeAdRecyclerViewAdapter;
-import com.adincube.sdk.nativead.stream.NativeAdStreamPositions;
-import com.monirapps.boiteabaptiste.BoiteRecyclerView;
+import com.monirapps.boitea.BoiteRecyclerView;
 import com.monirapps.boiteabaptiste.BuildConfig;
-import com.monirapps.boiteabaptiste.MainActivity;
+import com.monirapps.boitea.MainActivity;
 import com.monirapps.boiteabaptiste.R;
-import com.monirapps.boiteabaptiste.adapter.BoxesAdapter;
-import com.monirapps.boiteabaptiste.adapter.SoundsAdapter;
-import com.monirapps.boiteabaptiste.bo.SoundBox;
+import com.monirapps.boitea.adapter.BoxesAdapter;
+import com.monirapps.boitea.bo.SoundBox;
 
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.Realm;
@@ -84,7 +80,10 @@ public class BoxesFragment extends Fragment implements RealmRecyclerView.OnRefre
   }
 
   private void refreshList() {
-    final RealmQuery<SoundBox> data = realm.where(SoundBox.class).notEqualTo("packageName", BuildConfig.APPLICATION_ID);
+    final RealmQuery<SoundBox> data = realm.where(SoundBox.class)
+        .notEqualTo("packageName", BuildConfig.APPLICATION_ID)
+        .equalTo("validated", true)
+        .equalTo("banned", false);
     boxesAdapter = new BoxesAdapter(getContext(), data.findAllSorted("updated", Sort.DESCENDING));
 
     boxes.setOnRefreshListener(this);
