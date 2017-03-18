@@ -37,6 +37,8 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
 
   public static final String CONFIG_RETRIEVED = "config retrieved";
 
+  public static final String HIT = "hit";
+
   private BoiteRecyclerView sounds;
 
   private RealmBasedRecyclerViewAdapter soundsAdapter;
@@ -52,6 +54,9 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
     public void onReceive(Context context, Intent intent) {
       if (REFRESH_LIST.equals(intent.getAction())) {
         refreshList();
+      }
+      if (HIT.equals(intent.getAction())){
+        soundsAdapter.notifyDataSetChanged();
       }
       if (SET_CHANGED.equals(intent.getAction())){
         if(!onlyFavorites && !getUserVisibleHint()){
@@ -74,12 +79,21 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
   }
 
   @Override
+  public void setUserVisibleHint(boolean isVisibleToUser) {
+    super.setUserVisibleHint(isVisibleToUser);
+    if (soundsAdapter != null) {
+      soundsAdapter.notifyDataSetChanged();
+    }
+  }
+
+  @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     onlyFavorites = getArguments().getBoolean(ONLY_FAVORITES);
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(REFRESH_LIST);
     intentFilter.addAction(SET_CHANGED);
+    intentFilter.addAction(HIT);
     intentFilter.addAction(CONFIG_RETRIEVED);
     LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver, intentFilter);
   }

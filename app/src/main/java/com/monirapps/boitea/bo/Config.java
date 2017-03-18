@@ -82,6 +82,7 @@ public class Config extends RealmObject {
     this.icon = icon;
   }
 
+  // Must be done inside a transaction
   public void updateConfig(Context context, final Config newConfig) {
     setTitle(newConfig.getTitle());
     setColor(newConfig.getColor());
@@ -90,6 +91,9 @@ public class Config extends RealmObject {
     setIcon(newConfig.getIcon());
     setUrl(newConfig.getUrl());
     Realm realm = Realm.getDefaultInstance();
+    for (Sound sound : realm.where(Sound.class).findAll()) {
+      sound.setDeleted(true);
+    }
     for (Sound newSound : newConfig.getSounds()) {
       final Sound oldSound = realm.where(Sound.class).equalTo("id", newSound.getId()).findFirst();
       if (oldSound != null) {
@@ -102,11 +106,14 @@ public class Config extends RealmObject {
           oldSound.setSoundDownloaded(false);
           BoiteServices.API.downloadSound(context, oldSound.getId(), oldSound.getSound());
         }
+        oldSound.setDeleted(false);
         oldSound.setGlobalHits(newSound.getGlobalHits());
       } else {
+        newSound.setDeleted(false);
         getSounds().add(newSound);
       }
     }
+    realm.where(Sound.class).equalTo("deleted", true).findAll().deleteAllFromRealm();
     realm.close();
   }
 }

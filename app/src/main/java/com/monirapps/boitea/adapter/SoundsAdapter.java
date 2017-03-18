@@ -112,7 +112,7 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
           }
         });
         realm.close();
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent(SoundsFragment.SET_CHANGED));
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent(SoundsFragment.HIT));
        }
     });
     holder.favorite.setOnClickListener(new View.OnClickListener() {

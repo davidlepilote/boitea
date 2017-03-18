@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "159501689108",
+    "firebase_url": "https://boiteabaptiste-de32c.firebaseio.com",
+    "project_id": "boiteabaptiste-de32c",
+    "storage_bucket": "boiteabaptiste-de32c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:159501689108:android:e4ef1877722d5b75",
+        "android_client_info": {
+          "package_name": "com.monirapps.boiteabaptiste"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "159501689108-rtjojuatg3ku81iui46dt9fnjo918tmk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.monirapps.boiteabaptiste",
+            "certificate_hash": "732d8597070678f98620392e17f9fc7b293f66b9"
+          }
+        },
+        {
+          "client_id": "159501689108-0cqean72uh5m30tnhjc6d5njb23ji8hv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJpBpycmo0nz6OXDQbeV7nAOgs4DPHemE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "159501689108-0cqean72uh5m30tnhjc6d5njb23ji8hv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

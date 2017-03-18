@@ -1,6 +1,7 @@
 package com.monirapps.boitea.bo;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -29,6 +30,8 @@ public class Sound extends RealmObject implements Comparable<Sound> {
   private boolean favorite;
 
   private boolean soundDownloaded;
+
+  private boolean deleted;
 
   public String getId() {
     return id;
@@ -100,6 +103,14 @@ public class Sound extends RealmObject implements Comparable<Sound> {
 
   public boolean isSoundDownloaded() {
     return soundDownloaded;
+  }
+
+  public boolean isDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(boolean deleted) {
+    this.deleted = deleted;
   }
 
   public void setSoundDownloaded(boolean soundDownloaded) {

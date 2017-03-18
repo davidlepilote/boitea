@@ -74,7 +74,7 @@ public class BoxesAdapter extends RealmBasedRecyclerViewAdapter<SoundBox, BoxesA
       holder.title.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
       holder.subtitle.setText(soundBox.getSubtitle());
       holder.subtitle.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
-      Glide.with(getContext()).load(BoiteServices.ICONS_URL + soundBox.getIcon()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.icon) {
+      Glide.with(getContext()).load(BoiteServices.BASE_URL + soundBox.getIcon()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.icon) {
         @Override
         protected void setResource(Bitmap resource) {
           RoundedBitmapDrawable circularBitmapDrawable =

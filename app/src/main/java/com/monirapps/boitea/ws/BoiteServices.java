@@ -33,10 +33,7 @@ public enum BoiteServices {
 
   API;
 
-  public static final String BASE_URL = "http://david-fournier.fr/boite/";
-  //public static final String BASE_URL = " http://laboitea.api.monirapps.com/";
-
-  public static final String ICONS_URL = BASE_URL + "icons/";
+  public static final String BASE_URL = "http://laboitea.api.monirapps.com/";
 
   public static final String SUFFIX = BuildConfig.ENDPOINT_SUFFIX;
 
@@ -59,7 +56,7 @@ public enum BoiteServices {
   }
 
   public void hit(final String id){
-    restApi.hit(id).enqueue(new Callback<ResponseBody>() {
+    restApi.hit(id, BuildConfig.ENDPOINT_SUFFIX).enqueue(new Callback<ResponseBody>() {
       @Override
       public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         if(!response.isSuccessful()){

@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
       tabs.setTabTextColors(ContextCompat.getColor(getApplicationContext(), R.color.footer_background), color);
       tabs.setSelectedTabIndicatorColor(color);
       //Glide.with(getApplicationContext()).load(BoiteServices.ICONS_URL + config.getIcon()).asBitmap().centerCrop().into(icon);
-      Glide.with(getApplicationContext()).load(BoiteServices.ICONS_URL + config.getIcon()).asBitmap().centerCrop().into(new BitmapImageViewTarget(icon) {
+      Glide.with(getApplicationContext()).load(BoiteServices.BASE_URL + config.getIcon()).asBitmap().centerCrop().into(new BitmapImageViewTarget(icon) {
         @Override
         protected void setResource(Bitmap resource) {
           RoundedBitmapDrawable circularBitmapDrawable =
