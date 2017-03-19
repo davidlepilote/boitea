@@ -112,7 +112,7 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
           }
         });
         realm.close();
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent(SoundsFragment.HIT));
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent(SoundsFragment.HIT).putExtra(SoundsFragment.HIT, position));
        }
     });
     holder.favorite.setOnClickListener(new View.OnClickListener() {
@@ -120,11 +120,16 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
       public void onClick(final View view) {
         holder.favorite.cancelAnimation();
         holder.favorite.setProgress(0f);
+        final Bundle data = new Bundle();
+        data.putString("ID", sound.getId());
         if(!sound.isFavorite()){
+          data.putBoolean("FAV", true);
           holder.favorite.playAnimation();
         } else {
+          data.putBoolean("FAV", false);
           LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent(SoundsFragment.SET_CHANGED).putExtra(POSITION, position));
         }
+        firebaseAnalytics.logEvent("FAV", data);
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(new Realm.Transaction() {
           @Override

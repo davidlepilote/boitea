@@ -23,13 +23,22 @@ android {
             applicationId "com.monirapps.boiteabaptiste"
             buildConfigField "String", "ENDPOINT_SUFFIX", '"baptiste"'
             manifestPlaceholders = [onesignal_app_id: "0c83bb31-8f67-4d35-b38c-36f4d7fa5bf3",
-                                    onesignal_google_project_number: "159501689108"]
+                                    onesignal_google_project_number: "159501689108",
+                                    deeplink: "baptiste"]
         }
         chirac {
             applicationId "com.monirapps.boiteachirac"
             buildConfigField "String", "ENDPOINT_SUFFIX", '"chirac"'
             manifestPlaceholders = [onesignal_app_id: "099eecde-50a5-4fed-ab0b-b7027c5d0952",
-                                    onesignal_google_project_number: "1055980942161"]
+                                    onesignal_google_project_number: "1055980942161",
+                                    deeplink: "chirac"]
+        }
+        durif {
+            applicationId "com.monirapps.boiteadurif"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"durif"'
+            manifestPlaceholders = [onesignal_app_id: "1ce5f3ae-a498-432e-8e0d-f7989152c884",
+                                    onesignal_google_project_number: "1024048055705",
+                                    deeplink: "durif"]
         }
     }
 }

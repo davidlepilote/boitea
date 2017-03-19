@@ -56,7 +56,12 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
         refreshList();
       }
       if (HIT.equals(intent.getAction())){
-        soundsAdapter.notifyDataSetChanged();
+        final int position = intent.getIntExtra(HIT, -1);
+        if (position != -1){
+          soundsAdapter.notifyItemChanged(position);
+        } else {
+          soundsAdapter.notifyDataSetChanged();
+        }
       }
       if (SET_CHANGED.equals(intent.getAction())){
         if(!onlyFavorites && !getUserVisibleHint()){
@@ -121,7 +126,7 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
 
   private void refreshList() {
     final RealmQuery<Sound> data = realm.where(Sound.class).equalTo("soundDownloaded", true);
-    final SortStyle sortingStyle = SortStyle.getByPosition(getActivity().getPreferences(Context.MODE_PRIVATE).getInt(MainActivity.SORTING_STYLE, SortStyle.ALPHA.position));
+    final SortStyle sortingStyle = SortStyle.getByPosition(getContext().getSharedPreferences(MainActivity.SHARED, Context.MODE_PRIVATE).getInt(MainActivity.SORTING_STYLE, SortStyle.ALPHA.position));
     if (onlyFavorites) {
       data.equalTo("favorite", true);
     }

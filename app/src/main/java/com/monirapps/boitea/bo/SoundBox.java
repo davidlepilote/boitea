@@ -29,6 +29,8 @@ public class SoundBox extends RealmObject {
 
   private boolean validated;
 
+  private String dir;
+
   public String getTitle() {
     return title;
   }
@@ -51,6 +53,10 @@ public class SoundBox extends RealmObject {
 
   public String getIcon() {
     return icon;
+  }
+
+  public String getDir() {
+    return dir;
   }
 
   public boolean isBanned() {

@@ -11,6 +11,7 @@
         android:name="com.monirapps.boitea.BoiteApplication"
         android:allowBackup="true"
         android:largeHeap="true"
+        android:launchMode="singleTask"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -20,6 +21,14 @@
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                      android:host="laboitea.api.monirapps.com"
+                      android:pathPrefix="/${deeplink}/index" />
             </intent-filter>
         </activity>
     </application>

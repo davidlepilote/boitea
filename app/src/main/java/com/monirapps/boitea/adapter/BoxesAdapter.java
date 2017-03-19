@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.firebase.crash.FirebaseCrash;
+import com.monirapps.boiteabaptiste.BuildConfig;
 import com.monirapps.boiteabaptiste.R;
 import com.monirapps.boitea.Typefaces;
 import com.monirapps.boitea.bo.SoundBox;
@@ -92,7 +93,7 @@ public class BoxesAdapter extends RealmBasedRecyclerViewAdapter<SoundBox, BoxesA
         @Override
         public void onClick(View view) {
           Intent intent = new Intent(Intent.ACTION_VIEW);
-          intent.setData(Uri.parse("market://details?id=" + soundBox.getPackageName()));
+          intent.setData(Uri.parse(BoiteServices.BASE_URL + soundBox.getDir() + "/index"));
           getContext().startActivity(intent);
         }
       });
@@ -113,8 +114,8 @@ public class BoxesAdapter extends RealmBasedRecyclerViewAdapter<SoundBox, BoxesA
       @Override
       public void onClick(View view) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:boxes@monirapps.com"));
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Suggestion de boîte");
+        intent.setData(Uri.parse(getContext().getString(R.string.mailto)));
+        intent.putExtra(Intent.EXTRA_SUBJECT, getContext().getString(R.string.mail_subject));
         if (intent.resolveActivity(getContext().getPackageManager()) != null) {
           getContext().startActivity(intent);
         }

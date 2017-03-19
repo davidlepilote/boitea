@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
   public static final String HIDE_SORT_ITEM = "hide sort item";
   public static final String SORTING_STYLE = "sorting style";
   public static final String REFRESH_CONFIG = "sorting style";
+  public static final String SHARED = "SHARED";
 
   private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
     @Override
@@ -227,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle(R.string.sort_by);
-    final SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+    final SharedPreferences preferences = getSharedPreferences(SHARED, MODE_PRIVATE);
     final int chosenStyle = preferences.getInt(SORTING_STYLE, 0);
     builder.setSingleChoiceItems(items, chosenStyle, new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int item) {

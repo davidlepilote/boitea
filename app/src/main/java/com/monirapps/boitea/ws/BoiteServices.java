@@ -74,22 +74,27 @@ public enum BoiteServices {
   public void downloadSound(final Context context, final String id, final String soundPath) {
     restApi.getSound(soundPath).enqueue(new Callback<ResponseBody>() {
       @Override
-      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+      public void onResponse(Call<ResponseBody> call, final Response<ResponseBody> response) {
         if(response.isSuccessful()){
-          final InputStream fileSound = response.body().byteStream();
-          copyInputStreamToFile(fileSound, new File(context.getFilesDir() + "/" + soundPath));
-          Realm realm = Realm.getDefaultInstance();
-          realm.executeTransaction(new Realm.Transaction() {
+          new Thread(new Runnable() {
             @Override
-            public void execute(Realm realm) {
-              final Sound sound = realm.where(Sound.class).equalTo("id", id).findFirst();
-              if (sound != null) {
-                sound.setSoundDownloaded(true);
-              }
-              LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(SoundsFragment.REFRESH_LIST));
+            public void run() {
+              final InputStream fileSound = response.body().byteStream();
+              copyInputStreamToFile(fileSound, new File(context.getFilesDir() + "/" + soundPath));
+              Realm realm = Realm.getDefaultInstance();
+              realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                  final Sound sound = realm.where(Sound.class).equalTo("id", id).findFirst();
+                  if (sound != null) {
+                    sound.setSoundDownloaded(true);
+                  }
+                  LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(SoundsFragment.REFRESH_LIST));
+                }
+              });
+              realm.close();
             }
-          });
-          realm.close();
+          }).start();
         } else {
           FirebaseCrash.report(new IllegalArgumentException(response.code() + " : Sound " + soundPath + " not downloaded"));
         }
