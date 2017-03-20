@@ -89,7 +89,6 @@ public enum BoiteServices {
                   if (sound != null) {
                     sound.setSoundDownloaded(true);
                   }
-                  LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(SoundsFragment.REFRESH_LIST));
                 }
               });
               realm.close();
