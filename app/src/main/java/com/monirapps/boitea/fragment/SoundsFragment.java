@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +19,19 @@ import com.adincube.sdk.nativead.recycler.NativeAdRecyclerViewAdapter;
 import com.adincube.sdk.nativead.stream.NativeAdStreamPositions;
 import com.monirapps.boitea.BoiteRecyclerView;
 import com.monirapps.boitea.MainActivity;
-import com.monirapps.boiteabaptiste.R;
+import com.monirapps.boitea.R;
 import com.monirapps.boitea.SortStyle;
 import com.monirapps.boitea.adapter.SoundsAdapter;
 import com.monirapps.boitea.bo.Sound;
 
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
+import io.realm.OrderedCollectionChangeSet;
+import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
 import io.realm.RealmBasedRecyclerViewAdapter;
+import io.realm.RealmChangeListener;
 import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefreshListener {
 
@@ -39,9 +45,9 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
 
   public static final String HIT = "hit";
 
-  private BoiteRecyclerView sounds;
+  private RecyclerView sounds;
 
-  private RealmBasedRecyclerViewAdapter soundsAdapter;
+  private RecyclerView.Adapter soundsAdapter;
 
   private NativeAdRecyclerViewAdapter<SoundsAdapter.SoundViewHolder> nativeAdapter;
 
@@ -49,29 +55,31 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
 
   private boolean onlyFavorites;
 
+  private RealmResults<Sound> data;
+
   private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
     @Override
     public void onReceive(Context context, Intent intent) {
       if (REFRESH_LIST.equals(intent.getAction())) {
         refreshList();
       }
-      if (HIT.equals(intent.getAction())){
-        final int position = intent.getIntExtra(HIT, -1);
-        if (position != -1){
-          soundsAdapter.notifyItemChanged(position);
-        } else {
-          soundsAdapter.notifyDataSetChanged();
-        }
-      }
-      if (SET_CHANGED.equals(intent.getAction())){
-        if(!onlyFavorites && !getUserVisibleHint()){
-          soundsAdapter.notifyDataSetChanged();
-        }
-      }
-      if (CONFIG_RETRIEVED.equals(intent.getAction())){
-        sounds.setRefreshing(false);
-        soundsAdapter.notifyDataSetChanged();
-      }
+//      if (HIT.equals(intent.getAction())) {
+//        final int position = intent.getIntExtra(HIT, -1);
+//        if (position != -1) {
+//          soundsAdapter.notifyItemChanged(position);
+//        } else {
+//          soundsAdapter.notifyDataSetChanged();
+//        }
+//      }
+//      if (SET_CHANGED.equals(intent.getAction())) {
+//        if (!onlyFavorites && !getUserVisibleHint()) {
+//          soundsAdapter.notifyDataSetChanged();
+//        }
+//      }
+//      if (CONFIG_RETRIEVED.equals(intent.getAction())) {
+//        //sounds.setRefreshing(false);
+//        soundsAdapter.notifyDataSetChanged();
+//      }
     }
   };
 
@@ -117,6 +125,35 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
 
     realm = Realm.getDefaultInstance();
 
+    data = realm.where(Sound.class).equalTo("soundDownloaded", true).findAll();
+
+    data.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Sound>>() {
+      @Override
+      public void onChange(RealmResults<Sound> collection, OrderedCollectionChangeSet changeSet) {
+        // `null`  means the async query returns the first time.
+        if (changeSet == null) {
+          soundsAdapter.notifyDataSetChanged();
+          return;
+        }
+        // For deletions, the adapter has to be notified in reverse order.
+        OrderedCollectionChangeSet.Range[] deletions = changeSet.getDeletionRanges();
+        for (int i = deletions.length - 1; i >= 0; i--) {
+          OrderedCollectionChangeSet.Range range = deletions[i];
+          soundsAdapter.notifyItemRangeRemoved(range.startIndex, range.length);
+        }
+
+        OrderedCollectionChangeSet.Range[] insertions = changeSet.getInsertionRanges();
+        for (OrderedCollectionChangeSet.Range range : insertions) {
+          soundsAdapter.notifyItemRangeInserted(range.startIndex, range.length);
+        }
+
+        OrderedCollectionChangeSet.Range[] modifications = changeSet.getChangeRanges();
+        for (OrderedCollectionChangeSet.Range range : modifications) {
+          soundsAdapter.notifyItemRangeChanged(range.startIndex, range.length);
+        }
+      }
+    });
+
     bindViews(root);
 
     refreshList();
@@ -148,13 +185,14 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
 
     nativeAdapter = new NativeAdRecyclerViewAdapter<SoundsAdapter.SoundViewHolder>(getContext(), soundsAdapter, binding, positions);
 
-    sounds.setOnRefreshListener(this);
+    //sounds.setOnRefreshListener(this);
+    //sounds.setAdapter(soundsAdapter);
+    sounds.setLayoutManager(new LinearLayoutManager(getContext()));
     sounds.setAdapter(soundsAdapter);
-    sounds.setAdapter(nativeAdapter);
   }
 
   private void bindViews(View root) {
-    sounds = (BoiteRecyclerView) root.findViewById(R.id.sounds);
+    sounds = (RecyclerView) root.findViewById(R.id.sounds);
   }
 
   @Override
@@ -166,7 +204,9 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
   @Override
   public void onResume() {
     super.onResume();
-    nativeAdapter.refreshAds();
+    if (nativeAdapter != null) {
+      //nativeAdapter.refreshAds();
+    }
   }
 
   @Override

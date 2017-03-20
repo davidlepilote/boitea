@@ -7,15 +7,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.monirapps.boitea.BoiteRecyclerView
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/sounds"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:rrvIsRefreshable="true"
-        app:rrvLayoutType="LinearLayout"
-        app:rrvSwipeToDelete="false"
-        app:rrvEmptyLayoutId="@layout/empty_favorites"
+        android:overScrollMode="never"
+        android:scrollbarStyle="outsideOverlay"
         />
+
+    <!--<com.monirapps.boitea.BoiteRecyclerView-->
+        <!--android:id="@+id/sounds"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:rrvIsRefreshable="true"-->
+        <!--app:rrvLayoutType="LinearLayout"-->
+        <!--app:rrvSwipeToDelete="false"-->
+        <!--app:rrvEmptyLayoutId="@layout/empty_favorites"-->
+        <!--/>-->
 
 </RelativeLayout>
 

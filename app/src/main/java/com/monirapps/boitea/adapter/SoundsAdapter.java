@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +16,9 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.monirapps.boitea.R;
 import com.monirapps.boitea.fragment.SoundsFragment;
 import com.monirapps.boitea.MainActivity;
-import com.monirapps.boiteabaptiste.R;
 import com.monirapps.boitea.Typefaces;
 import com.monirapps.boitea.bo.Sound;
 import com.monirapps.boitea.ws.BoiteServices;
@@ -33,21 +34,9 @@ import io.realm.RealmViewHolder;
  * Created by David et Monireh on 11/03/2017.
  */
 
-public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAdapter.SoundViewHolder> {
+public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewHolder> {
 
-  public static final String POSITION = "position";
-
-  private final RealmResults<Sound> data;
-
-  private final FirebaseAnalytics firebaseAnalytics;
-
-  public SoundsAdapter(Context context, @Nullable RealmResults<Sound> data) {
-    super(context, data, true, true);
-    firebaseAnalytics = FirebaseAnalytics.getInstance(context);
-    this.data = data;
-  }
-
-  public static class SoundViewHolder extends RealmViewHolder {
+  public static class SoundViewHolder extends RecyclerView.ViewHolder {
 
     private CardView cardView;
 
@@ -72,23 +61,38 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
     }
   }
 
+  public static final String POSITION = "position";
+
+  private final RealmResults<Sound> data;
+
+  private final FirebaseAnalytics firebaseAnalytics;
+
+  private final Context context;
+
+  public SoundsAdapter(Context context, @Nullable RealmResults<Sound> data) {
+    this.context = context;
+    firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+    this.data = data;
+  }
+
   @Override
-  public SoundViewHolder onCreateRealmViewHolder(ViewGroup parent, int viewType) {
+  public SoundViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return new SoundViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.sound_item, parent, false));
   }
 
   @Override
-  public void onBindRealmViewHolder(final SoundViewHolder holder, final int position) {
+  public void onBindViewHolder(final SoundViewHolder holder, int pos) {
+    final int position = holder.getAdapterPosition();
     final Sound sound = data.get(position);
     holder.title.setText(sound.getTitle());
-    holder.title.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
+    holder.title.setTypeface(Typefaces.GROBOLD.typeface(context));
     if(TextUtils.isEmpty(sound.getSubtitle()) == false){
       holder.subtitle.setText(sound.getSubtitle());
       holder.subtitle.setVisibility(View.VISIBLE);
     } else {
       holder.subtitle.setVisibility(View.GONE);
     }
-    holder.subtitle.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
+    holder.subtitle.setTypeface(Typefaces.GROBOLD.typeface(context));
     holder.favorite.setProgress(sound.isFavorite() ? 1f : 0f);
     holder.myClicks.setText(String.format(Locale.FRENCH, "%d", sound.getPersonalHits()));
     holder.totalClicks.setText(String.format(Locale.FRENCH, "%d", sound.getGlobalHits()));
@@ -112,8 +116,8 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
           }
         });
         realm.close();
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent(SoundsFragment.HIT).putExtra(SoundsFragment.HIT, position));
-       }
+        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(SoundsFragment.HIT).putExtra(SoundsFragment.HIT, position));
+      }
     });
     holder.favorite.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -127,7 +131,7 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
           holder.favorite.playAnimation();
         } else {
           data.putBoolean("FAV", false);
-          LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent(SoundsFragment.SET_CHANGED).putExtra(POSITION, position));
+          LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(SoundsFragment.SET_CHANGED).putExtra(POSITION, position));
         }
         firebaseAnalytics.logEvent("FAV", data);
         Realm realm = Realm.getDefaultInstance();
@@ -140,6 +144,11 @@ public class SoundsAdapter extends RealmBasedRecyclerViewAdapter<Sound, SoundsAd
         realm.close();
       }
     });
+  }
+
+  @Override
+  public int getItemCount() {
+    return data.size();
   }
 
 }

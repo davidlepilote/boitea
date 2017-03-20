@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <com.monirapps.boitea.BoiteRecyclerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/sounds"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbarStyle="outsideOverlay"
-        android:overScrollMode="never"
-        app:rrvIsRefreshable="true"
-        app:rrvLayoutType="LinearLayout"
-        app:rrvSwipeToDelete="false"
-        />
+<android.support.v7.widget.RecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sounds"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:overScrollMode="never"
+    android:scrollbarStyle="outsideOverlay"
+    />
+    <!--<com.monirapps.boitea.BoiteRecyclerView-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--android:id="@+id/sounds"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:scrollbarStyle="outsideOverlay"-->
+    <!--android:overScrollMode="never"-->
+    <!--app:rrvIsRefreshable="true"-->
+    <!--app:rrvLayoutType="LinearLayout"-->
+    <!--app:rrvSwipeToDelete="false"-->
+    <!--/>-->
 
 
     <!--android:paddingBottom="@dimen/activity_vertical_margin"-->

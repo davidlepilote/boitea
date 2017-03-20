@@ -60,6 +60,7 @@ dependencies {
     //REALM
     compile 'io.realm:android-adapters:1.4.1'
     compile 'com.github.thorbenprimke:realm-recyclerview:0.9.25'
+    compile 'io.realm:android-adapters:1.4.1'
 
     //ADINCUBE
     compile ('com.adincube.sdk:AdinCube-Java-6fbf:1.12.0@aar') {

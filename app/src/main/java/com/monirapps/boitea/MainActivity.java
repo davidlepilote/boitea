@@ -37,7 +37,6 @@ import com.monirapps.boitea.bo.Sound;
 import com.monirapps.boitea.bo.SoundBox;
 import com.monirapps.boitea.fragment.BoxesFragment;
 import com.monirapps.boitea.fragment.SoundsFragment;
-import com.monirapps.boiteabaptiste.R;
 import com.monirapps.boitea.ws.BoiteServices;
 
 import java.io.FileInputStream;

@@ -8,14 +8,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.monirapps.boitea.BoiteRecyclerView;
-import com.monirapps.boiteabaptiste.BuildConfig;
+import com.monirapps.boitea.BuildConfig;
 import com.monirapps.boitea.MainActivity;
-import com.monirapps.boiteabaptiste.R;
+import com.monirapps.boitea.R;
 import com.monirapps.boitea.adapter.BoxesAdapter;
 import com.monirapps.boitea.bo.SoundBox;
 
@@ -29,9 +31,9 @@ public class BoxesFragment extends Fragment implements RealmRecyclerView.OnRefre
 
   public static final String CONFIG_RETRIEVED = "config retrieved";
 
-  private BoiteRecyclerView boxes;
+  private RecyclerView boxes;
 
-  private RealmBasedRecyclerViewAdapter boxesAdapter;
+  private BoxesAdapter boxesAdapter;
 
   private Realm realm;
 
@@ -39,7 +41,7 @@ public class BoxesFragment extends Fragment implements RealmRecyclerView.OnRefre
     @Override
     public void onReceive(Context context, Intent intent) {
       if (CONFIG_RETRIEVED.equals(intent.getAction())){
-        boxes.setRefreshing(false);
+        //boxes.setRefreshing(false);
         boxesAdapter.notifyDataSetChanged();
       }
     }
@@ -86,12 +88,13 @@ public class BoxesFragment extends Fragment implements RealmRecyclerView.OnRefre
         .equalTo("banned", false);
     boxesAdapter = new BoxesAdapter(getContext(), data.findAllSorted("updated", Sort.DESCENDING));
 
-    boxes.setOnRefreshListener(this);
+    //boxes.setOnRefreshListener(this);
+    boxes.setLayoutManager(new LinearLayoutManager(getContext()));
     boxes.setAdapter(boxesAdapter);
   }
 
   private void bindViews(View root) {
-    boxes = (BoiteRecyclerView) root.findViewById(R.id.sounds);
+    boxes = (RecyclerView) root.findViewById(R.id.sounds);
   }
 
   @Override
