@@ -95,6 +95,7 @@ public class BoxesFragment extends Fragment implements RealmRecyclerView.OnRefre
 
   private void bindViews(View root) {
     boxes = (RecyclerView) root.findViewById(R.id.sounds);
+    root.findViewById(R.id.empty_view).setVisibility(View.GONE);
   }
 
   @Override

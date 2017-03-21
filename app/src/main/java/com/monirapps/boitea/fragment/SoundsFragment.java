@@ -32,6 +32,7 @@ import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmChangeListener;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 
 public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefreshListener {
 
@@ -47,7 +48,9 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
 
   private RecyclerView sounds;
 
-  private RecyclerView.Adapter soundsAdapter;
+  private SoundsAdapter soundsAdapter;
+
+  private View emptyView;
 
   private NativeAdRecyclerViewAdapter<SoundsAdapter.SoundViewHolder> nativeAdapter;
 
@@ -92,14 +95,6 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
   }
 
   @Override
-  public void setUserVisibleHint(boolean isVisibleToUser) {
-    super.setUserVisibleHint(isVisibleToUser);
-    if (soundsAdapter != null) {
-      soundsAdapter.notifyDataSetChanged();
-    }
-  }
-
-  @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     onlyFavorites = getArguments().getBoolean(ONLY_FAVORITES);
@@ -121,38 +116,9 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    View root = inflater.inflate(onlyFavorites ? R.layout.favorites_fragment : R.layout.sounds_fragment, container, false);
+    View root = inflater.inflate(R.layout.sounds_fragment, container, false);
 
     realm = Realm.getDefaultInstance();
-
-    data = realm.where(Sound.class).equalTo("soundDownloaded", true).findAll();
-
-    data.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Sound>>() {
-      @Override
-      public void onChange(RealmResults<Sound> collection, OrderedCollectionChangeSet changeSet) {
-        // `null`  means the async query returns the first time.
-        if (changeSet == null) {
-          soundsAdapter.notifyDataSetChanged();
-          return;
-        }
-        // For deletions, the adapter has to be notified in reverse order.
-        OrderedCollectionChangeSet.Range[] deletions = changeSet.getDeletionRanges();
-        for (int i = deletions.length - 1; i >= 0; i--) {
-          OrderedCollectionChangeSet.Range range = deletions[i];
-          soundsAdapter.notifyItemRangeRemoved(range.startIndex, range.length);
-        }
-
-        OrderedCollectionChangeSet.Range[] insertions = changeSet.getInsertionRanges();
-        for (OrderedCollectionChangeSet.Range range : insertions) {
-          soundsAdapter.notifyItemRangeInserted(range.startIndex, range.length);
-        }
-
-        OrderedCollectionChangeSet.Range[] modifications = changeSet.getChangeRanges();
-        for (OrderedCollectionChangeSet.Range range : modifications) {
-          soundsAdapter.notifyItemRangeChanged(range.startIndex, range.length);
-        }
-      }
-    });
 
     bindViews(root);
 
@@ -162,12 +128,61 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
   }
 
   private void refreshList() {
-    final RealmQuery<Sound> data = realm.where(Sound.class).equalTo("soundDownloaded", true);
+
+    final RealmQuery<Sound> query = realm.where(Sound.class).equalTo("soundDownloaded", true);
     final SortStyle sortingStyle = SortStyle.getByPosition(getContext().getSharedPreferences(MainActivity.SHARED, Context.MODE_PRIVATE).getInt(MainActivity.SORTING_STYLE, SortStyle.ALPHA.position));
     if (onlyFavorites) {
-      data.equalTo("favorite", true);
+      query.equalTo("favorite", true);
     }
-    soundsAdapter = new SoundsAdapter(getContext(), data.findAllSorted(sortingStyle.sortingField, sortingStyle.order));
+    data = query.findAllSorted(sortingStyle.sortingField, sortingStyle.order);
+    emptyView.setVisibility(onlyFavorites && data.size() == 0 ? View.VISIBLE : View.INVISIBLE);
+
+    data.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Sound>>() {
+      @Override
+      public void onChange(RealmResults<Sound> collection, OrderedCollectionChangeSet changeSet) {
+        // `null`  means the async query returns the first time.
+
+        emptyView.setVisibility(onlyFavorites && collection.size() == 0 ? View.VISIBLE : View.INVISIBLE);
+
+        if (changeSet == null) {
+          soundsAdapter.notifyDataSetChanged();
+          return;
+        }
+
+        // There is a swap between two items
+        if(changeSet.getDeletions().length == 1 && changeSet.getInsertions().length == 1){
+          soundsAdapter.notifyItemMoved(changeSet.getDeletions()[0], changeSet.getInsertions()[0]);
+          soundsAdapter.notifyItemChanged(changeSet.getDeletions()[0]);
+          soundsAdapter.notifyItemChanged(changeSet.getInsertions()[0]);
+        } else {
+          // For deletions, the adapter has to be notified in reverse order.
+
+          OrderedCollectionChangeSet.Range[] deletions = changeSet.getDeletionRanges();
+          for (int i = deletions.length - 1; i >= 0; i--) {
+            OrderedCollectionChangeSet.Range range = deletions[i];
+            soundsAdapter.notifyItemRemoved(range.startIndex);
+            //soundsAdapter.notifyItemRangeRemoved(range.startIndex, range.length);
+          }
+
+          OrderedCollectionChangeSet.Range[] insertions = changeSet.getInsertionRanges();
+          for (OrderedCollectionChangeSet.Range range : insertions) {
+            soundsAdapter.notifyItemRangeInserted(range.startIndex, range.length);
+          }
+
+          // If not visible, just refresh the list
+          if(!getUserVisibleHint()){
+            soundsAdapter.notifyDataSetChanged();
+          }
+
+//          OrderedCollectionChangeSet.Range[] modifications = changeSet.getChangeRanges();
+//          for (OrderedCollectionChangeSet.Range range : modifications) {
+//            soundsAdapter.notifyItemRangeChanged(range.startIndex, range.length);
+//          }
+        }
+      }
+    });
+
+    soundsAdapter = new SoundsAdapter(getContext(), data);
 
     NativeAdViewBinding binding = new NativeAdViewBinding.Builder(R.layout.native_ad_item)
         .withTitleViewId(R.id.title)
@@ -185,14 +200,16 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
 
     nativeAdapter = new NativeAdRecyclerViewAdapter<SoundsAdapter.SoundViewHolder>(getContext(), soundsAdapter, binding, positions);
 
-    //sounds.setOnRefreshListener(this);
-    //sounds.setAdapter(soundsAdapter);
     sounds.setLayoutManager(new LinearLayoutManager(getContext()));
-    sounds.setAdapter(soundsAdapter);
+    final ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(soundsAdapter, 0.8f);
+    scaleInAnimationAdapter.setFirstOnly(false);
+    scaleInAnimationAdapter.setDuration(200);
+    sounds.setAdapter(scaleInAnimationAdapter);
   }
 
   private void bindViews(View root) {
     sounds = (RecyclerView) root.findViewById(R.id.sounds);
+    emptyView = root.findViewById(R.id.empty_view);
   }
 
   @Override

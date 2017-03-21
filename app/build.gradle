@@ -88,6 +88,9 @@ dependencies {
     //LOTTIE
     compile 'com.airbnb.android:lottie:1.5.3'
 
+    //RECYCLER VIEW ANIMS
+    compile 'jp.wasabeef:recyclerview-animators:2.2.6'
+
     testCompile 'junit:junit:4.12'
 }
 
