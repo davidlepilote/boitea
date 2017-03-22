@@ -74,6 +74,15 @@ public class MainActivity extends AppCompatActivity {
     }
   };
 
+  @Override
+  public void onBackPressed() {
+    if (pager.getCurrentItem() == 1) {
+      super.onBackPressed();
+    } else {
+      pager.setCurrentItem(1);
+    }
+  }
+
   public static class BoitesPagerAdapter extends FragmentStatePagerAdapter {
 
     private enum FragmentStyle {

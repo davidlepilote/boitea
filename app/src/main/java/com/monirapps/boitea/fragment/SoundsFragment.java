@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,16 +21,14 @@ import com.monirapps.boitea.SortStyle;
 import com.monirapps.boitea.adapter.SoundsAdapter;
 import com.monirapps.boitea.bo.Sound;
 
-import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
-import jp.wasabeef.recyclerview.animators.FlipInTopXAnimator;
 
-public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefreshListener {
+public class SoundsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
   public static final String ONLY_FAVORITES = "only favorites";
 
@@ -42,6 +41,8 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
   public static final String HIT = "hit";
 
   private RecyclerView sounds;
+
+  private SwipeRefreshLayout pullToRefresh;
 
   private SoundsAdapter soundsAdapter;
 
@@ -58,6 +59,11 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
     public void onReceive(Context context, Intent intent) {
       if (REFRESH_LIST.equals(intent.getAction())) {
         refreshList();
+        pullToRefresh.setRefreshing(false);
+      }
+      if (CONFIG_RETRIEVED.equals(intent.getAction())){
+        pullToRefresh.setRefreshing(false);
+        soundsAdapter.notifyItemRangeChanged(0, data.size());
       }
     }
   };
@@ -179,6 +185,8 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
   private void bindViews(View root) {
     sounds = (RecyclerView) root.findViewById(R.id.sounds);
     emptyView = root.findViewById(R.id.empty_view);
+    pullToRefresh = (SwipeRefreshLayout) root.findViewById(R.id.pull_to_refresh);
+    pullToRefresh.setOnRefreshListener(this);
   }
 
   @Override
@@ -190,5 +198,6 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
   @Override
   public void onRefresh() {
     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent(MainActivity.REFRESH_CONFIG));
+    pullToRefresh.setRefreshing(true);
   }
 }
