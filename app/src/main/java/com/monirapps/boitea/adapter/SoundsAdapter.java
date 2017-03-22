@@ -1,34 +1,44 @@
 package com.monirapps.boitea.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.adincube.sdk.AdinCube;
+import com.adincube.sdk.AdinCubeNativeEventListener;
+import com.adincube.sdk.NativeAd;
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 import com.monirapps.boitea.R;
-import com.monirapps.boitea.fragment.SoundsFragment;
 import com.monirapps.boitea.MainActivity;
 import com.monirapps.boitea.Typefaces;
 import com.monirapps.boitea.bo.Sound;
 import com.monirapps.boitea.ws.BoiteServices;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import io.realm.Realm;
-import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmResults;
-import io.realm.RealmViewHolder;
 
 /**
  * Created by David et Monireh on 11/03/2017.
@@ -63,7 +73,22 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
     }
   }
 
-  public static final String POSITION = "position";
+  public static class NativeAdViewHolder extends SoundViewHolder {
+
+    private ImageView icon;
+
+    private ViewGroup root;
+
+    public NativeAdViewHolder(View itemView) {
+      super(itemView);
+      icon = (ImageView) itemView.findViewById(R.id.icon);
+      root = (ViewGroup) itemView.findViewById(R.id.native_ad_root);
+    }
+  }
+
+  private static final int SOUND = 1;
+
+  private static final int NATIVE = 2;
 
   private final RealmResults<Sound> data;
 
@@ -71,31 +96,106 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
 
   private final Context context;
 
+  private final Map<Integer, NativeAd> nativeAds = new LinkedHashMap<>();
+
+  private final Set<Integer> requestedAd = new HashSet<>();
+
   public SoundsAdapter(Context context, @Nullable RealmResults<Sound> data) {
     this.context = context;
     firebaseAnalytics = FirebaseAnalytics.getInstance(context);
     this.data = data;
   }
 
-  @Override
-  public SoundViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    return new SoundViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.sound_item, parent, false));
+  private NativeAd requestAd(final int position) {
+    if (!requestedAd.contains(position)) {
+      requestedAd.add(position);
+      AdinCube.Native.load(this.context, 1, new AdinCubeNativeEventListener() {
+        @Override
+        public void onAdLoaded(List<NativeAd> nativeAdList) {
+          nativeAds.put(position, nativeAdList.get(0));
+          notifyItemInserted(position);
+        }
+      });
+    }
+    return nativeAds.get(position);
   }
 
-  public Sound getData(int position) {
-    return data.get(position);
+  @Override
+  public SoundViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    switch (viewType) {
+      case SOUND:
+        return new SoundViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.sound_item, parent, false));
+      case NATIVE:
+        return new NativeAdViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.native_ad_item, parent, false));
+      default:
+        return new SoundViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.sound_item, parent, false));
+    }
+  }
+
+  @Override
+  public int getItemViewType(int position) {
+    if(nativeAds.containsKey(position)){
+      return NATIVE;
+    } else {
+      return SOUND;
+    }
+  }
+
+  public void destroy() {
+    for (NativeAd nativeAd : nativeAds.values()) {
+      AdinCube.Native.destroy(nativeAd);
+    }
+  }
+
+  public int getRealIndex(int realmPosition){
+    int realIndex = realmPosition;
+    for (Integer integer : nativeAds.keySet()) {
+      if(integer <= realmPosition){
+        realIndex++;
+      } else {
+        break;
+      }
+    }
+    return realIndex;
+  }
+
+  private int getRealmIndex(int realPosition){
+    int realmIndex = realPosition;
+    for (Integer integer : nativeAds.keySet()) {
+      if(integer < realPosition){
+        realmIndex--;
+      } else {
+        break;
+      }
+    }
+    return realmIndex;
   }
 
   @Override
   public void onBindViewHolder(final SoundViewHolder holder, int pos) {
-    final Sound sound = data.get(pos);
-    // The holder contains the same sound : modification of the item
+
+    if ((pos + 3) % 5 == 0 && (pos + 3) % 5 < data.size()) {
+      requestAd(pos);
+    }
+
+    if (nativeAds.containsKey(pos)) {
+        NativeAd nativeAd = nativeAds.get(pos);
+        NativeAdViewHolder nativeAdViewHolder = (NativeAdViewHolder) holder;
+        AdinCube.Native.link(nativeAdViewHolder.root, nativeAd);
+    }
+    else {
+      final Sound sound = data.get(getRealmIndex(pos));
+      bindSoundViewHolder(holder, sound);
+    }
+  }
+
+  private void bindSoundViewHolder(final SoundViewHolder holder, final Sound sound) {
     holder.myClicks.setText(String.format(Locale.FRENCH, "%d", sound.getPersonalHits()));
     holder.totalClicks.setText(String.format(Locale.FRENCH, "%d", sound.getGlobalHits()));
     holder.id = sound.getId();
     holder.title.setText(sound.getTitle());
     holder.title.setTypeface(Typefaces.GROBOLD.typeface(context));
-    if (TextUtils.isEmpty(sound.getSubtitle()) == false) {
+    if (!TextUtils.isEmpty(sound.getSubtitle())) {
       holder.subtitle.setText(sound.getSubtitle());
       holder.subtitle.setVisibility(View.VISIBLE);
     } else {
@@ -124,7 +224,6 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
           }
         });
         realm.close();
-        //LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(SoundsFragment.HIT).putExtra(SoundsFragment.HIT, position));
       }
     });
     holder.favorite.setProgress(sound.isFavorite() ? 1f : 0f);
@@ -140,7 +239,6 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
           holder.favorite.playAnimation();
         } else {
           data.putBoolean("FAV", false);
-          //LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(SoundsFragment.SET_CHANGED).putExtra(POSITION, position));
         }
         firebaseAnalytics.logEvent("FAV", data);
         Realm realm = Realm.getDefaultInstance();
@@ -157,7 +255,7 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
 
   @Override
   public int getItemCount() {
-    return data.size();
+    return data.size() + Math.min(nativeAds.size(), (data.size() + 1) / 4);
   }
 
 }
