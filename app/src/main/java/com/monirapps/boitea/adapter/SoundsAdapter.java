@@ -150,10 +150,14 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
 
   public int getRealIndex(int realmPosition){
     int realIndex = realmPosition;
-    for (Integer integer : nativeAds.keySet()) {
-      if(integer <= realmPosition){
+    for (Integer integer : nativeAds.keySet())
+    {
+      if (integer <= realIndex)
+      {
         realIndex++;
-      } else {
+      }
+      else
+      {
         break;
       }
     }
@@ -175,7 +179,7 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
   @Override
   public void onBindViewHolder(final SoundViewHolder holder, int pos) {
 
-    if ((pos + 3) % 5 == 0 && (pos + 3) % 5 < data.size()) {
+    if (pos % 5 == 2) {
       requestAd(pos);
     }
 

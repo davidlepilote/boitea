@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+                xmlns:lottie="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -14,11 +15,15 @@
         android:gravity="center_horizontal"
         >
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/ic_star_empty"
-            />
+        <com.airbnb.lottie.LottieAnimationView
+          android:id="@+id/favorite"
+          android:layout_width="80dp"
+          android:layout_height="80dp"
+          android:layout_centerVertical="true"
+          android:layout_alignParentRight="true"
+          lottie:lottie_loop="true"
+          lottie:lottie_autoPlay="true"
+          lottie:lottie_fileName="star.json" />
 
         <TextView
             android:layout_width="wrap_content"

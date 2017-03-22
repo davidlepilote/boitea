@@ -27,6 +27,7 @@ import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.FlipInTopXAnimator;
 
 public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefreshListener {
 
@@ -129,8 +130,8 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
           final int from = soundsAdapter.getRealIndex(changeSet.getDeletions()[0]);
           final int to = soundsAdapter.getRealIndex(changeSet.getInsertions()[0]);
           soundsAdapter.notifyItemMoved(from, to);
-          soundsAdapter.notifyItemChanged(from);
-          soundsAdapter.notifyItemChanged(to);
+          //soundsAdapter.notifyItemChanged(from);
+          //soundsAdapter.notifyItemChanged(to);
         } else {
           // For deletions, the adapter has to be notified in reverse order.
 
