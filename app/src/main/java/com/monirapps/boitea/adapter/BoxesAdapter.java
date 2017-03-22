@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.firebase.crash.FirebaseCrash;
-import com.monirapps.boiteabaptiste.BuildConfig;
-import com.monirapps.boiteabaptiste.R;
+import com.monirapps.boitea.R;
 import com.monirapps.boitea.Typefaces;
 import com.monirapps.boitea.bo.SoundBox;
 import com.monirapps.boitea.ws.BoiteServices;
@@ -33,17 +33,9 @@ import io.realm.RealmViewHolder;
  * Created by David et Monireh on 11/03/2017.
  */
 
-public class BoxesAdapter extends RealmBasedRecyclerViewAdapter<SoundBox, BoxesAdapter.SoundBoxViewHolder> {
+public class BoxesAdapter extends RecyclerView.Adapter<BoxesAdapter.SoundBoxViewHolder> {
 
-  private final RealmResults<SoundBox> data;
-
-  public BoxesAdapter(Context context, @Nullable RealmResults<SoundBox> data) {
-    super(context, data, true, true);
-    this.data = data;
-    addFooter();
-  }
-
-  public static class SoundBoxViewHolder extends RealmViewHolder {
+  public static class SoundBoxViewHolder extends RecyclerView.ViewHolder {
 
     private CardView cardView;
 
@@ -62,64 +54,92 @@ public class BoxesAdapter extends RealmBasedRecyclerViewAdapter<SoundBox, BoxesA
     }
   }
 
-  @Override
-  public SoundBoxViewHolder onCreateRealmViewHolder(ViewGroup parent, int viewType) {
-    return new SoundBoxViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.box_item, parent, false));
+  private static final int SOUND_BOX = 1;
+
+  private static final int FOOTER = 2;
+
+  private final RealmResults<SoundBox> data;
+
+  private final Context context;
+
+  public BoxesAdapter(Context context, RealmResults<SoundBox> data) {
+    this.context = context;
+    this.data = data;
+  }
+
+  private Context getContext() {
+    return context;
   }
 
   @Override
-  public void onBindRealmViewHolder(final SoundBoxViewHolder holder, final int position) {
-    final SoundBox soundBox = data.get(position);
-    try {
-      holder.title.setText(soundBox.getTitle());
-      holder.title.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
-      holder.subtitle.setText(soundBox.getSubtitle());
-      holder.subtitle.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
-      Glide.with(getContext()).load(BoiteServices.BASE_URL + soundBox.getIcon()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.icon) {
-        @Override
-        protected void setResource(Bitmap resource) {
-          RoundedBitmapDrawable circularBitmapDrawable =
-              RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
-          circularBitmapDrawable.setCircular(true);
-          holder.icon.setImageDrawable(circularBitmapDrawable);
-        }
-      });
-      try {
-        holder.cardView.setCardBackgroundColor(Color.parseColor(soundBox.getColor()));
-      } catch (IllegalArgumentException exception) {
-        FirebaseCrash.report(new IllegalArgumentException("Color not parseable : " + soundBox.getColor(), exception));
-      }
-      holder.cardView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          Intent intent = new Intent(Intent.ACTION_VIEW);
-          intent.setData(Uri.parse(BoiteServices.BASE_URL + soundBox.getDir() + "/index"));
-          getContext().startActivity(intent);
-        }
-      });
-    } catch (NullPointerException exception) {
-      FirebaseCrash.report(new NullPointerException("soundbox has a problem of null field : " + soundBox.getPackageName()));
+  public SoundBoxViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    switch (viewType) {
+      case SOUND_BOX:
+        return new SoundBoxViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.box_item, parent, false));
+      case FOOTER:
+        return new SoundBoxViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_item, parent, false));
+      default:
+        return new SoundBoxViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.box_item, parent, false));
     }
   }
 
   @Override
-  public SoundBoxViewHolder onCreateFooterViewHolder(ViewGroup parent) {
-    return new SoundBoxViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_item, parent, false));
+  public int getItemViewType(int position) {
+    return position == data.size() ? FOOTER : SOUND_BOX;
   }
 
   @Override
-  public void onBindFooterViewHolder(SoundBoxViewHolder holder, int position) {
-    holder.cardView.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.footer_background));
-    holder.cardView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse(getContext().getString(R.string.mailto)));
-        intent.putExtra(Intent.EXTRA_SUBJECT, getContext().getString(R.string.mail_subject));
-        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-          getContext().startActivity(intent);
+  public void onBindViewHolder(final SoundBoxViewHolder holder, int position) {
+    if (position == data.size()) {
+      holder.cardView.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.footer_background));
+      holder.cardView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          Intent intent = new Intent(Intent.ACTION_SENDTO);
+          intent.setData(Uri.parse(getContext().getString(R.string.mailto)));
+          intent.putExtra(Intent.EXTRA_SUBJECT, getContext().getString(R.string.mail_subject));
+          if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+            getContext().startActivity(intent);
+          }
         }
+      });
+    } else {
+      final SoundBox soundBox = data.get(position);
+      try {
+        holder.title.setText(soundBox.getTitle());
+        holder.title.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
+        holder.subtitle.setText(soundBox.getSubtitle());
+        holder.subtitle.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
+        Glide.with(getContext()).load(BoiteServices.BASE_URL + soundBox.getIcon()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.icon) {
+          @Override
+          protected void setResource(Bitmap resource) {
+            RoundedBitmapDrawable circularBitmapDrawable =
+                RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
+            circularBitmapDrawable.setCircular(true);
+            holder.icon.setImageDrawable(circularBitmapDrawable);
+          }
+        });
+        try {
+          holder.cardView.setCardBackgroundColor(Color.parseColor(soundBox.getColor()));
+        } catch (IllegalArgumentException exception) {
+          FirebaseCrash.report(new IllegalArgumentException("Color not parseable : " + soundBox.getColor(), exception));
+        }
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(BoiteServices.BASE_URL + soundBox.getDir() + "/index"));
+            getContext().startActivity(intent);
+          }
+        });
+      } catch (NullPointerException exception) {
+        FirebaseCrash.report(new NullPointerException("soundbox has a problem of null field : " + soundBox.getPackageName()));
       }
-    });
+    }
+  }
+
+  @Override
+  public int getItemCount() {
+    return data.size() + 1;
   }
 }

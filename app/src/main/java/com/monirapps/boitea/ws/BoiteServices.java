@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.firebase.crash.FirebaseCrash;
+import com.monirapps.boitea.BuildConfig;
 import com.monirapps.boitea.bo.Config;
 import com.monirapps.boitea.bo.Sound;
 import com.monirapps.boitea.bo.SoundBox;
 import com.monirapps.boitea.fragment.SoundsFragment;
-import com.monirapps.boiteabaptiste.BuildConfig;
 
 import java.io.File;
 import java.io.FileOutputStream;
