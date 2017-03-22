@@ -110,7 +110,7 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
     if (onlyFavorites) {
       query.equalTo("favorite", true);
     }
-    data = query.findAllSorted(sortingStyle.sortingField, sortingStyle.order);
+    data = query.findAllSortedAsync(sortingStyle.sortingField, sortingStyle.order);
     emptyView.setVisibility(onlyFavorites && data.size() == 0 ? View.VISIBLE : View.INVISIBLE);
 
     data.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Sound>>() {
@@ -121,7 +121,7 @@ public class SoundsFragment extends Fragment implements RealmRecyclerView.OnRefr
         emptyView.setVisibility(onlyFavorites && collection.size() == 0 ? View.VISIBLE : View.INVISIBLE);
 
         if (changeSet == null) {
-          soundsAdapter.notifyDataSetChanged();
+          soundsAdapter.notifyItemRangeInserted(0, collection.size());
           return;
         }
 

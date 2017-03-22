@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,8 @@ import com.adincube.sdk.AdinCube;
 import com.adincube.sdk.AdinCubeNativeEventListener;
 import com.adincube.sdk.NativeAd;
 import com.airbnb.lottie.LottieAnimationView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 import com.monirapps.boitea.R;
@@ -78,12 +81,27 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
 
     private ImageView icon;
 
+    private ImageView cover;
+
+    private Button cta;
+
+    private TextView rating;
+
+    private TextView title;
+
+    private TextView description;
+
     private ViewGroup root;
 
     public NativeAdViewHolder(View itemView) {
       super(itemView);
-      icon = (ImageView) itemView.findViewById(R.id.icon);
       root = (ViewGroup) itemView.findViewById(R.id.native_ad_root);
+      icon = (ImageView) itemView.findViewById(R.id.icon);
+      cover = (ImageView) itemView.findViewById(R.id.cover);
+      title = (TextView) itemView.findViewById(R.id.title);
+      rating = (TextView) itemView.findViewById(R.id.rating);
+      description = (TextView) itemView.findViewById(R.id.description);
+      cta = (Button) itemView.findViewById(R.id.cta);
     }
   }
 
@@ -116,6 +134,11 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
           nativeAds.put(position, nativeAdList.get(0));
           notifyItemInserted(position);
         }
+
+        @Override
+        public void onLoadError(String s) {
+          requestAd(position);
+        }
       });
     }
     return nativeAds.get(position);
@@ -135,7 +158,10 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
 
   @Override
   public int getItemViewType(int position) {
-    if(nativeAds.containsKey(position)){
+    if (position % 5 == 2) {
+      requestAd(position);
+    }
+    if (nativeAds.containsKey(position)) {
       return NATIVE;
     } else {
       return SOUND;
@@ -148,26 +174,22 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
     }
   }
 
-  public int getRealIndex(int realmPosition){
+  public int getRealIndex(int realmPosition) {
     int realIndex = realmPosition;
-    for (Integer integer : nativeAds.keySet())
-    {
-      if (integer <= realIndex)
-      {
+    for (Integer integer : nativeAds.keySet()) {
+      if (integer <= realIndex) {
         realIndex++;
-      }
-      else
-      {
+      } else {
         break;
       }
     }
     return realIndex;
   }
 
-  private int getRealmIndex(int realPosition){
+  private int getRealmIndex(int realPosition) {
     int realmIndex = realPosition;
     for (Integer integer : nativeAds.keySet()) {
-      if(integer <= realPosition){
+      if (integer <= realPosition) {
         realmIndex--;
       } else {
         break;
@@ -178,17 +200,16 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
 
   @Override
   public void onBindViewHolder(final SoundViewHolder holder, int pos) {
-
-    if (pos % 5 == 2) {
-      requestAd(pos);
-    }
-
     if (nativeAds.containsKey(pos)) {
-        NativeAd nativeAd = nativeAds.get(pos);
-        NativeAdViewHolder nativeAdViewHolder = (NativeAdViewHolder) holder;
-        AdinCube.Native.link(nativeAdViewHolder.root, nativeAd);
-    }
-    else {
+      NativeAd nativeAd = nativeAds.get(pos);
+      NativeAdViewHolder nativeAdViewHolder = (NativeAdViewHolder) holder;
+      nativeAdViewHolder.title.setText(nativeAd.getTitle());
+      nativeAdViewHolder.description.setText(nativeAd.getDescription());
+      nativeAdViewHolder.cta.setText(nativeAd.getCallToAction());
+      Glide.with(holder.itemView.getContext()).load(nativeAd.getCover().getUrl()).fitCenter().into(nativeAdViewHolder.cover);
+      Glide.with(holder.itemView.getContext()).load(nativeAd.getIcon().getUrl()).fitCenter().into(nativeAdViewHolder.icon);
+      AdinCube.Native.link(nativeAdViewHolder.root, nativeAd);
+    } else {
       final Sound sound = data.get(getRealmIndex(pos));
       bindSoundViewHolder(holder, sound);
     }
