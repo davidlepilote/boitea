@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -96,7 +97,7 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
 
   private final Context context;
 
-  private final Map<Integer, NativeAd> nativeAds = new LinkedHashMap<>();
+  private final Map<Integer, NativeAd> nativeAds = new TreeMap<>();
 
   private final Set<Integer> requestedAd = new HashSet<>();
 
@@ -162,7 +163,7 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
   private int getRealmIndex(int realPosition){
     int realmIndex = realPosition;
     for (Integer integer : nativeAds.keySet()) {
-      if(integer < realPosition){
+      if(integer <= realPosition){
         realmIndex--;
       } else {
         break;
