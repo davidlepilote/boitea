@@ -28,6 +28,7 @@ public class BoiteApplication extends MultiDexApplication {
     Realm.setDefaultConfiguration(realmConfiguration);
 
     AdinCube.setAppKey(getString(R.string.adincube_app_key));
+    AdinCube.Native.Binder.init(getApplicationContext());
 
     OneSignal.startInit(this).init();
   }

@@ -40,6 +40,27 @@ android {
                                     onesignal_google_project_number: "1024048055705",
                                     deeplink: "durif"]
         }
+        oss117 {
+            applicationId "com.monirapps.boiteaoss117"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"oss117"'
+            manifestPlaceholders = [onesignal_app_id: "1ce5f3ae-a498-432e-8e0d-f7989152c884",
+                                    onesignal_google_project_number: "1024048055705",
+                                    deeplink: "oss117"]
+        }
+        fillon {
+            applicationId "com.monirapps.boiteafillon"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"fillon"'
+            manifestPlaceholders = [onesignal_app_id: "1ce5f3ae-a498-432e-8e0d-f7989152c884",
+                                    onesignal_google_project_number: "1024048055705",
+                                    deeplink: "fillon"]
+        }
+        macron {
+            applicationId "com.monirapps.boiteamacron"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"macron"'
+            manifestPlaceholders = [onesignal_app_id: "1ce5f3ae-a498-432e-8e0d-f7989152c884",
+                                    onesignal_google_project_number: "1024048055705",
+                                    deeplink: "macron"]
+        }
     }
 }
 
@@ -90,6 +111,9 @@ dependencies {
 
     //RECYCLER VIEW ANIMS
     compile 'jp.wasabeef:recyclerview-animators:2.2.6'
+
+    //RATING BAR
+    compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
 
     testCompile 'junit:junit:4.12'
 }

@@ -111,6 +111,10 @@ public class SoundsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
   private void refreshList() {
 
+    if(data != null){
+      data.removeAllChangeListeners();
+    }
+
     final RealmQuery<Sound> query = realm.where(Sound.class).equalTo("soundDownloaded", true);
     final SortStyle sortingStyle = SortStyle.getByPosition(getContext().getSharedPreferences(MainActivity.SHARED, Context.MODE_PRIVATE).getInt(MainActivity.SORTING_STYLE, SortStyle.ALPHA.position));
     if (onlyFavorites) {
@@ -127,7 +131,7 @@ public class SoundsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         emptyView.setVisibility(onlyFavorites && collection.size() == 0 ? View.VISIBLE : View.INVISIBLE);
 
         if (changeSet == null) {
-          soundsAdapter.notifyItemRangeInserted(0, collection.size());
+          //soundsAdapter.notifyDataSetChanged();
           return;
         }
 
@@ -192,6 +196,9 @@ public class SoundsFragment extends Fragment implements SwipeRefreshLayout.OnRef
   @Override
   public void onDestroy() {
     super.onDestroy();
+    if(data != null){
+      data.removeAllChangeListeners();
+    }
     LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(broadcastReceiver);
   }
 
