@@ -7,12 +7,16 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 3
-        versionName "2.1"
+        versionCode 5
+        versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -43,23 +47,30 @@ android {
         oss117 {
             applicationId "com.monirapps.boiteaoss117"
             buildConfigField "String", "ENDPOINT_SUFFIX", '"oss117"'
-            manifestPlaceholders = [onesignal_app_id: "1ce5f3ae-a498-432e-8e0d-f7989152c884",
-                                    onesignal_google_project_number: "1024048055705",
+            manifestPlaceholders = [onesignal_app_id: "e427c06e-ff48-42dc-83dd-46b4494d08cd",
+                                    onesignal_google_project_number: "694719562141",
                                     deeplink: "oss117"]
         }
         fillon {
             applicationId "com.monirapps.boiteafillon"
-            buildConfigField "String", "ENDPOINT_SUFFIX", '"fillon"'
-            manifestPlaceholders = [onesignal_app_id: "1ce5f3ae-a498-432e-8e0d-f7989152c884",
-                                    onesignal_google_project_number: "1024048055705",
-                                    deeplink: "fillon"]
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"Fillon"'
+            manifestPlaceholders = [onesignal_app_id: "9cc148f6-0bc8-40dd-85be-908cd37d7e6a",
+                                    onesignal_google_project_number: "570125192957",
+                                    deeplink: "Fillon"]
         }
         macron {
             applicationId "com.monirapps.boiteamacron"
             buildConfigField "String", "ENDPOINT_SUFFIX", '"macron"'
-            manifestPlaceholders = [onesignal_app_id: "1ce5f3ae-a498-432e-8e0d-f7989152c884",
-                                    onesignal_google_project_number: "1024048055705",
+            manifestPlaceholders = [onesignal_app_id: "e2ad1008-4801-4df9-be95-e328f686623c",
+                                    onesignal_google_project_number: "699410924812",
                                     deeplink: "macron"]
+        }
+        heenok {
+            applicationId "com.monirapps.boiteaheenok"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"heenok"'
+            manifestPlaceholders = [onesignal_app_id: "39c2b9aa-2442-45a1-95bf-53ddbc258b11",
+                                    onesignal_google_project_number: "245552947877",
+                                    deeplink: "heenok"]
         }
     }
 }

@@ -17,6 +17,9 @@ import io.realm.RealmConfiguration;
 
 public class BoiteApplication extends MultiDexApplication {
 
+  public static final String GLIDE_UPDATE_VALUE = "glideUpdateValue";
+  public static int glideUpdateValue = 0;
+
   @Override
   public void onCreate() {
     super.onCreate();
@@ -29,6 +32,8 @@ public class BoiteApplication extends MultiDexApplication {
 
     AdinCube.setAppKey(getString(R.string.adincube_app_key));
     AdinCube.Native.Binder.init(getApplicationContext());
+
+    glideUpdateValue = getSharedPreferences(MainActivity.SHARED, MODE_PRIVATE).getInt(GLIDE_UPDATE_VALUE, 0);
 
     OneSignal.startInit(this).init();
   }

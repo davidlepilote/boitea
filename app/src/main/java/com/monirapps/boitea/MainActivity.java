@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle(R.string.sort_by);
     final SharedPreferences preferences = getSharedPreferences(SHARED, MODE_PRIVATE);
-    final int chosenStyle = preferences.getInt(SORTING_STYLE, 0);
+    final int chosenStyle = preferences.getInt(SORTING_STYLE, SortStyle.TOTAL_CLICKS.ordinal());
     builder.setSingleChoiceItems(items, chosenStyle, new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int item) {
         final SortStyle sortingStyle = SortStyle.getByPosition(item);
@@ -259,16 +259,7 @@ public class MainActivity extends AppCompatActivity {
       toolbar.setBackgroundColor(color);
       tabs.setTabTextColors(ContextCompat.getColor(getApplicationContext(), R.color.footer_background), color);
       tabs.setSelectedTabIndicatorColor(color);
-      //Glide.with(getApplicationContext()).load(BoiteServices.ICONS_URL + config.getIcon()).asBitmap().centerCrop().into(icon);
-      Glide.with(getApplicationContext()).load(BoiteServices.BASE_URL + config.getIcon()).asBitmap().centerCrop().into(new BitmapImageViewTarget(icon) {
-        @Override
-        protected void setResource(Bitmap resource) {
-          RoundedBitmapDrawable circularBitmapDrawable =
-              RoundedBitmapDrawableFactory.create(getResources(), resource);
-          circularBitmapDrawable.setCircular(true);
-          icon.setImageDrawable(circularBitmapDrawable);
-        }
-      });
+      BoiteServices.bindPicture(getApplicationContext(), BoiteServices.BASE_URL + config.getIcon(), icon);
       for (Sound sound : config.getSounds()) {
         if (sound.isSoundDownloaded() == false) {
           BoiteServices.API.downloadSound(getApplicationContext(), sound.getId(), sound.getSound());
@@ -297,6 +288,9 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void retrieveConfig() {
+    final SharedPreferences preferences = getSharedPreferences(SHARED, MODE_PRIVATE);
+    BoiteApplication.glideUpdateValue++;
+    preferences.edit().putInt(BoiteApplication.GLIDE_UPDATE_VALUE, BoiteApplication.glideUpdateValue % 1_000_000).commit();
     retrieveOtherBoxes();
     BoiteServices.API.getConfig().enqueue(new Callback<Config>() {
       @Override
@@ -350,7 +344,7 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-  public static void playBaptiste(Context context, String resource) {
+  public static void playSound(Context context, String resource) {
     try {
       mediaPlayer.stop();
       mediaPlayer.release();

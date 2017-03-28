@@ -18,8 +18,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.signature.StringSignature;
 import com.google.firebase.crash.FirebaseCrash;
+import com.monirapps.boitea.MainActivity;
 import com.monirapps.boitea.R;
 import com.monirapps.boitea.Typefaces;
 import com.monirapps.boitea.bo.SoundBox;
@@ -110,15 +113,22 @@ public class BoxesAdapter extends RecyclerView.Adapter<BoxesAdapter.SoundBoxView
         holder.title.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
         holder.subtitle.setText(soundBox.getSubtitle());
         holder.subtitle.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
-        Glide.with(getContext()).load(BoiteServices.BASE_URL + soundBox.getIcon()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.icon) {
-          @Override
-          protected void setResource(Bitmap resource) {
-            RoundedBitmapDrawable circularBitmapDrawable =
-                RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
-            circularBitmapDrawable.setCircular(true);
-            holder.icon.setImageDrawable(circularBitmapDrawable);
-          }
-        });
+        BoiteServices.bindPicture(getContext(), BoiteServices.BASE_URL + soundBox.getIcon(), holder.icon);
+//        Glide.with(getContext()).load(BoiteServices.BASE_URL + soundBox.getIcon()).asBitmap().diskCacheStrategy(DiskCacheStrategy.RESULT)
+//            .signature(new StringSignature(lastKnownGoodValue + 1))
+//            .thumbnail(
+//                Glide.with(getContext())
+//                    .load(BoiteServices.BASE_URL + soundBox.getIcon())
+//                    .signature(new StringSignature(lastKnownGoodValue)))
+//            .centerCrop().into(new BitmapImageViewTarget(holder.icon) {
+//          @Override
+//          protected void setResource(Bitmap resource) {
+//            RoundedBitmapDrawable circularBitmapDrawable =
+//                RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
+//            circularBitmapDrawable.setCircular(true);
+//            holder.icon.setImageDrawable(circularBitmapDrawable);
+//          }
+//        });
         try {
           holder.cardView.setCardBackgroundColor(Color.parseColor(soundBox.getColor()));
         } catch (IllegalArgumentException exception) {

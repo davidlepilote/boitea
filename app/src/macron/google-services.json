@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "699410924812",
+    "firebase_url": "https://boiteamacron.firebaseio.com",
+    "project_id": "boiteamacron",
+    "storage_bucket": "boiteamacron.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:699410924812:android:3c88e7489592e45b",
+        "android_client_info": {
+          "package_name": "com.monirapps.boiteamacron"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "699410924812-irev9hrol5o99mds8ik8mk61v492at1d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdCBwL7FGXYn-ZldTVw7cMe9_gLLvmTM4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

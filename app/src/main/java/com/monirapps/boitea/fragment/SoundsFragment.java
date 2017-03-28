@@ -116,11 +116,11 @@ public class SoundsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     final RealmQuery<Sound> query = realm.where(Sound.class).equalTo("soundDownloaded", true);
-    final SortStyle sortingStyle = SortStyle.getByPosition(getContext().getSharedPreferences(MainActivity.SHARED, Context.MODE_PRIVATE).getInt(MainActivity.SORTING_STYLE, SortStyle.ALPHA.position));
+    final SortStyle sortingStyle = SortStyle.getByPosition(getContext().getSharedPreferences(MainActivity.SHARED, Context.MODE_PRIVATE).getInt(MainActivity.SORTING_STYLE, SortStyle.TOTAL_CLICKS.position));
     if (onlyFavorites) {
       query.equalTo("favorite", true);
     }
-    data = query.findAllSortedAsync(sortingStyle.sortingField, sortingStyle.order);
+    data = query.findAllSorted(sortingStyle.sortingField, sortingStyle.order);
     emptyView.setVisibility(onlyFavorites && data.size() == 0 ? View.VISIBLE : View.INVISIBLE);
 
     data.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Sound>>() {

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "694719562141",
+    "firebase_url": "https://boiteaoss117.firebaseio.com",
+    "project_id": "boiteaoss117",
+    "storage_bucket": "boiteaoss117.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:694719562141:android:9c0cf84d32c76187",
+        "android_client_info": {
+          "package_name": "com.monirapps.boiteaoss117"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "694719562141-0hrn37dc990uh69c01g4sd9v0g5t2s9j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdn7_v4sXuybIv73DLxw2UgillVZGJ5f4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

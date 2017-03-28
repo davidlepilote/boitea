@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "570125192957",
+    "firebase_url": "https://boiteafillon.firebaseio.com",
+    "project_id": "boiteafillon",
+    "storage_bucket": "boiteafillon.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:570125192957:android:5ea95a3962668b12",
+        "android_client_info": {
+          "package_name": "com.monirapps.boiteafillon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "570125192957-ef20oe57obn449l3kb046arvvd50p4it.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaqaxPO6YeYrn_F5wxzyE0Hjzqsb9isYY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

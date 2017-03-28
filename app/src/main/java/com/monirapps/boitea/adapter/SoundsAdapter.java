@@ -24,21 +24,14 @@ import com.adincube.sdk.AdinCubeNativeEventListener;
 import com.adincube.sdk.NativeAd;
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 import com.monirapps.boitea.R;
 import com.monirapps.boitea.MainActivity;
 import com.monirapps.boitea.Typefaces;
 import com.monirapps.boitea.bo.Sound;
 import com.monirapps.boitea.ws.BoiteServices;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -164,12 +157,6 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
             requestAd(position);
           }
         }
-
-        @Override
-        public void onLoadError(String s) {
-          requestedAd.remove(position);
-          requestAd(position);
-        }
       });
     }
   }
@@ -267,7 +254,7 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
     holder.cardView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        MainActivity.playBaptiste(view.getContext(), sound.getSound());
+        MainActivity.playSound(view.getContext(), sound.getSound());
         BoiteServices.API.hit(sound.getId());
         final Bundle data = new Bundle();
         data.putString("ID", sound.getId());
