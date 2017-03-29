@@ -231,7 +231,9 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
         nativeAdViewHolder.rating.setRating(rating);
       }
       nativeAdViewHolder.cta.setText(nativeAd.getCallToAction());
-      Glide.with(holder.itemView.getContext()).load(nativeAd.getCover().getUrl()).fitCenter().into(nativeAdViewHolder.cover);
+      if(nativeAd.getCover() != null){
+        Glide.with(holder.itemView.getContext()).load(nativeAd.getCover().getUrl()).fitCenter().into(nativeAdViewHolder.cover);
+      }
       Glide.with(holder.itemView.getContext()).load(nativeAd.getIcon().getUrl()).fitCenter().into(nativeAdViewHolder.icon);
       AdinCube.Native.link(nativeAdViewHolder.root, nativeAd);
     }

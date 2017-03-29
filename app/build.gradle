@@ -95,12 +95,9 @@ dependencies {
     compile 'io.realm:android-adapters:1.4.1'
 
     //ADINCUBE
-    compile ('com.adincube.sdk:AdinCube-Java-6fbf:1.12.0@aar') {
+    compile ('com.adincube.sdk:AdinCube-Java-11efbf:1.12.0@aar') {
         transitive = true
         exclude group: 'com.google.android.gms'
-    }
-    compile('com.adincube.sdk:AdinCube-Native-RecyclerView-Extension:1.1.5') {
-        transitive = true
     }
 
     //MULTIDEX

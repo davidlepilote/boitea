@@ -1,16 +1,10 @@
 package com.monirapps.boitea;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 
-import com.adincube.sdk.nativead.recycler.NativeAdRecyclerViewAdapter;
-
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
-import io.realm.RealmBasedRecyclerViewAdapter;
 
 /**
  * Created by David et Monireh on 11/03/2017.
@@ -44,10 +38,5 @@ public class BoiteRecyclerView extends RealmRecyclerView {
     getRecycleView().setClipToPadding(false);
     //((SimpleItemAnimator) getRecycleView().getItemAnimator()).setSupportsChangeAnimations(false);
   }
-
-  public void setAdapter(final NativeAdRecyclerViewAdapter adapter){
-    getRecycleView().setAdapter(adapter);
-  }
-
 
 }
