@@ -95,7 +95,7 @@ dependencies {
     compile 'io.realm:android-adapters:1.4.1'
 
     //ADINCUBE
-    compile ('com.adincube.sdk:AdinCube-Java-11efbf:1.12.0@aar') {
+    compile ('com.adincube.sdk:AdinCube-Java-11efbf:1.12.8@aar') {
         transitive = true
         exclude group: 'com.google.android.gms'
     }
