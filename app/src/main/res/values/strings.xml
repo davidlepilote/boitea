@@ -2,11 +2,13 @@
     <string name="loading">Chargement des sons …</string>
     <string name="total_clicks">Clics totaux</string>
     <string name="my_clicks">Mes clics</string>
-    <string name="sort">trier</string>
+    <string name="sort">Trier</string>
     <string name="sort_by">Trier par</string>
     <string name="empty_favorites_description">Vous n\'avez pas encore choisi de sons favoris. Cliquez sur les étoiles dans la liste des sons pour les enregistrer ici.</string>
     <string name="footer_title">Suggérez-nous de nouvelles boîtes !</string>
     <string name="footer_subtitle">Nous ferons notre possible pour les créer</string>
     <string name="mailto">mailto:boitea@monirapps.com</string>
     <string name="mail_subject">Suggestion de boîte</string>
+    <string name="share">Partager</string>
+    <string name="share_text">Regarde cette app : %1$s ! Ce sont toutes ses meilleures punchlines regroupées au même endroit. C\'est excellent ! Tu peux la télécharger ici : http://play.google.com/store/apps/details?id=%2$s</string>
 </resources>

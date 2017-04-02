@@ -224,6 +224,19 @@ public class MainActivity extends AppCompatActivity {
       case R.id.sort:
         showSortDialog();
         return true;
+      case R.id.share:
+        final Realm realm = Realm.getDefaultInstance();
+        String title = realm.where(Config.class).findFirst().getTitle();
+        realm.close();
+        if(title == null){
+          title = getResources().getString(R.string.app_name);
+        }
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.share_text, title, BuildConfig.APPLICATION_ID));
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+        return true;
       default:
         return super.onOptionsItemSelected(item);
     }

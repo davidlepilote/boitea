@@ -6,4 +6,10 @@
         android:icon="@drawable/ic_sort"
         android:title="@string/sort"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/share"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share"
+        app:showAsAction="ifRoom"
+        />
 </menu>
