@@ -7,7 +7,7 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 6
+        versionCode 7
         versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -71,6 +71,27 @@ android {
             manifestPlaceholders = [onesignal_app_id: "39c2b9aa-2442-45a1-95bf-53ddbc258b11",
                                     onesignal_google_project_number: "245552947877",
                                     deeplink: "heenok"]
+        }
+        classeamericaine {
+            applicationId "com.monirapps.laboiteaclasseamericaine"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"classeamericaine"'
+            manifestPlaceholders = [onesignal_app_id: "9c8b05e4-6167-45b6-bea1-ec757c415305",
+                                    onesignal_google_project_number: "179739306071",
+                                    deeplink: "classeamericaine"]
+        }
+        kaaris {
+            applicationId "com.monirapps.boiteakaaris"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"kaaris"'
+            manifestPlaceholders = [onesignal_app_id: "4e0dba11-fc6a-46ae-b152-b0ff4c39dd86",
+                                    onesignal_google_project_number: "108520607552",
+                                    deeplink: "kaaris"]
+        }
+        melenchon {
+            applicationId "com.monirapps.boiteamelenchon"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"melenchon"'
+            manifestPlaceholders = [onesignal_app_id: "e200115d-3e69-45fa-8d16-b692fa9a8939",
+                                    onesignal_google_project_number: "949507045108",
+                                    deeplink: "melenchon"]
         }
     }
 }

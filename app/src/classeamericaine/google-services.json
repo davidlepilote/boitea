@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "179739306071",
+    "firebase_url": "https://boiteaclasseamericaine.firebaseio.com",
+    "project_id": "boiteaclasseamericaine",
+    "storage_bucket": "boiteaclasseamericaine.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:179739306071:android:7d71cf4efc107ecd",
+        "android_client_info": {
+          "package_name": "com.monirapps.laboiteaclasseamericaine"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "179739306071-6e4h0do3agjac120kb6kbpc2b7as4gg6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRznZ8nDpgvayC4C_acvntNmVIgfu1K24"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

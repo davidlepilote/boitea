@@ -113,7 +113,7 @@ public class BoxesAdapter extends RecyclerView.Adapter<BoxesAdapter.SoundBoxView
         holder.title.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
         holder.subtitle.setText(soundBox.getSubtitle());
         holder.subtitle.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
-        BoiteServices.bindPicture(getContext(), BoiteServices.BASE_URL + soundBox.getIcon(), holder.icon);
+        BoiteServices.bindPicture(getContext(), BoiteServices.BASE_URL + soundBox.getIcon(), holder.icon, soundBox.getUpdated());
 //        Glide.with(getContext()).load(BoiteServices.BASE_URL + soundBox.getIcon()).asBitmap().diskCacheStrategy(DiskCacheStrategy.RESULT)
 //            .signature(new StringSignature(lastKnownGoodValue + 1))
 //            .thumbnail(

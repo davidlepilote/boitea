@@ -84,12 +84,14 @@ public class Config extends RealmObject {
 
   // Must be done inside a transaction
   public void updateConfig(Context context, final Config newConfig) {
-    setTitle(newConfig.getTitle());
-    setColor(newConfig.getColor());
-    setPackageName(newConfig.getPackageName());
-    setUpdated(newConfig.getUpdated());
-    setIcon(newConfig.getIcon());
-    setUrl(newConfig.getUrl());
+    if(newConfig.getUpdated() > getUpdated()){
+      setTitle(newConfig.getTitle());
+      setColor(newConfig.getColor());
+      setPackageName(newConfig.getPackageName());
+      setUpdated(newConfig.getUpdated());
+      setIcon(newConfig.getIcon());
+      setUrl(newConfig.getUrl());
+    }
     Realm realm = Realm.getDefaultInstance();
     for (Sound sound : realm.where(Sound.class).findAll()) {
       sound.setDeleted(true);

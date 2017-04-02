@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
       toolbar.setBackgroundColor(color);
       tabs.setTabTextColors(ContextCompat.getColor(getApplicationContext(), R.color.footer_background), color);
       tabs.setSelectedTabIndicatorColor(color);
-      BoiteServices.bindPicture(getApplicationContext(), BoiteServices.BASE_URL + config.getIcon(), icon);
+      BoiteServices.bindPicture(getApplicationContext(), BoiteServices.BASE_URL + config.getIcon(), icon, config.getUpdated());
       for (Sound sound : config.getSounds()) {
         if (sound.isSoundDownloaded() == false) {
           BoiteServices.API.downloadSound(getApplicationContext(), sound.getId(), sound.getSound());

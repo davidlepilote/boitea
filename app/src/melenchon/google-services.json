@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "949507045108",
+    "firebase_url": "https://boiteamelenchon.firebaseio.com",
+    "project_id": "boiteamelenchon",
+    "storage_bucket": "boiteamelenchon.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:949507045108:android:8ad16c08e3599ba3",
+        "android_client_info": {
+          "package_name": "com.monirapps.boiteamelenchon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "949507045108-ld03mm5v1jjdd9s02b3ovahn2081ejtl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6brmQX1fxfgLChlpuBXWtuoutpLlbcdk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

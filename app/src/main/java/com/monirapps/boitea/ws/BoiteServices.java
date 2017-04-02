@@ -141,17 +141,17 @@ public enum BoiteServices {
     }
   }
 
-  public static void bindPicture(final Context context, String url, final ImageView imageView) {
+  public static void bindPicture(final Context context, String url, final ImageView imageView, long updated) {
     Glide.with(context)
         .load(url)
         .diskCacheStrategy(DiskCacheStrategy.RESULT)
-        .signature(new StringSignature("" + BoiteApplication.glideUpdateValue))
+        .signature(new StringSignature("" + updated))
         .thumbnail(Glide
             .with(context)
             .load(url)
             .dontAnimate()
             .transform(new CircleTransform(context))
-            .signature(new StringSignature("" + (BoiteApplication.glideUpdateValue - 1))))
+            .signature(new StringSignature("" + updated)))
         .centerCrop()
         .dontAnimate()
         .transform(new CircleTransform(context))

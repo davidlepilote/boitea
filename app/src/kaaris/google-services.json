@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "108520607552",
+    "firebase_url": "https://boiteakaaris.firebaseio.com",
+    "project_id": "boiteakaaris",
+    "storage_bucket": "boiteakaaris.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:108520607552:android:e547f423d9140992",
+        "android_client_info": {
+          "package_name": "com.monirapps.boiteakaaris"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "108520607552-gir9bioucs7t82lfcdrfd7gej1bgnrbk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA30JQ5kLSDSaTpIBSXQBtYZbAqVW7hOoo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
