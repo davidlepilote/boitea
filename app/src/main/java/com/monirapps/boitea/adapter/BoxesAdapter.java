@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -21,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.signature.StringSignature;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 import com.monirapps.boitea.MainActivity;
 import com.monirapps.boitea.R;
@@ -61,6 +63,8 @@ public class BoxesAdapter extends RecyclerView.Adapter<BoxesAdapter.SoundBoxView
 
   private static final int FOOTER = 2;
 
+  private final FirebaseAnalytics firebaseAnalytics;
+
   private final RealmResults<SoundBox> data;
 
   private final Context context;
@@ -68,6 +72,7 @@ public class BoxesAdapter extends RecyclerView.Adapter<BoxesAdapter.SoundBoxView
   public BoxesAdapter(Context context, RealmResults<SoundBox> data) {
     this.context = context;
     this.data = data;
+    firebaseAnalytics = FirebaseAnalytics.getInstance(context);
   }
 
   private Context getContext() {
@@ -139,6 +144,9 @@ public class BoxesAdapter extends RecyclerView.Adapter<BoxesAdapter.SoundBoxView
           public void onClick(View view) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(BoiteServices.BASE_URL + soundBox.getDir() + "/index"));
+            final Bundle data = new Bundle();
+            data.putString("BOX", soundBox.getDir());
+            firebaseAnalytics.logEvent("BOX", data);
             getContext().startActivity(intent);
           }
         });

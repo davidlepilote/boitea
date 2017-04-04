@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "617999673958",
+    "firebase_url": "https://boiteacagole.firebaseio.com",
+    "project_id": "boiteacagole",
+    "storage_bucket": "boiteacagole.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617999673958:android:c23cf655a297fd4e",
+        "android_client_info": {
+          "package_name": "com.monirapps.boiteacagole"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "617999673958-8fqt7du950roshtnk2p6qhruldkrg66h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD17lv7PntMropxgr5PKrNoM_0WGr9DZLU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

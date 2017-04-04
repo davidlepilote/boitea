@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "435256682701",
+    "firebase_url": "https://boiteapresidentielle.firebaseio.com",
+    "project_id": "boiteapresidentielle",
+    "storage_bucket": "boiteapresidentielle.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:435256682701:android:3d6fcdaf361c8a03",
+        "android_client_info": {
+          "package_name": "com.monirapps.boiteapresidentielles"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "435256682701-t37di5snhikcd9rkhfhad9il6h2m0naa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFCmvHalY5uiqqFxAnDQ3b8YAJd2ne0WQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

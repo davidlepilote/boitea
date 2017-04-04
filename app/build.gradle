@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 7
-        versionName "2.0"
+        versionCode 8
+        versionName "2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -92,6 +92,20 @@ android {
             manifestPlaceholders = [onesignal_app_id: "e200115d-3e69-45fa-8d16-b692fa9a8939",
                                     onesignal_google_project_number: "949507045108",
                                     deeplink: "melenchon"]
+        }
+        presidentielle {
+            applicationId "com.monirapps.boiteapresidentielles"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"presidentielles"'
+            manifestPlaceholders = [onesignal_app_id: "ca3dc929-e582-4aaf-aeab-bf1c49535fcc",
+                                    onesignal_google_project_number: "435256682701",
+                                    deeplink: "presidentielles"]
+        }
+        cagole {
+            applicationId "com.monirapps.boiteacagole"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"cagole"'
+            manifestPlaceholders = [onesignal_app_id: "bd717d4a-3c3b-44cd-a2c6-f63535a09c31",
+                                    onesignal_google_project_number: "617999673958",
+                                    deeplink: "cagole"]
         }
     }
 }
