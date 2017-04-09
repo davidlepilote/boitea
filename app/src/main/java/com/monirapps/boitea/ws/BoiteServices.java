@@ -126,7 +126,7 @@ public enum BoiteServices {
     });
   }
 
-  private void copyInputStreamToFile(InputStream in, File file) {
+  public static void copyInputStreamToFile(InputStream in, File file) {
     try {
       OutputStream out = new FileOutputStream(file);
       byte[] buf = new byte[1024];

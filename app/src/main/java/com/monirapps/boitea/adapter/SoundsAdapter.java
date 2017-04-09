@@ -1,11 +1,13 @@
 package com.monirapps.boitea.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -253,6 +255,13 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
     }
     holder.subtitle.setTypeface(Typefaces.GROBOLD.typeface(context));
     holder.cardView.setCardBackgroundColor(Color.parseColor(sound.getColor()));
+    holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+      @Override
+      public boolean onLongClick(View v) {
+        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(MainActivity.SET_RINGTONE).putExtra(MainActivity.SOUND_PATH, sound.getSound()));
+        return true;
+      }
+    });
     holder.cardView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {

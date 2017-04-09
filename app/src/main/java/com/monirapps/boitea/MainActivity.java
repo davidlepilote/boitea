@@ -1,24 +1,30 @@
 package com.monirapps.boitea;
 
+import android.*;
+import android.Manifest;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.IntRange;
+import android.support.annotation.IntegerRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -30,8 +36,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.monirapps.boitea.bo.Config;
 import com.monirapps.boitea.bo.Sound;
 import com.monirapps.boitea.bo.SoundBox;
@@ -39,14 +43,20 @@ import com.monirapps.boitea.fragment.BoxesFragment;
 import com.monirapps.boitea.fragment.SoundsFragment;
 import com.monirapps.boitea.ws.BoiteServices;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.jar.*;
 
 import io.realm.Realm;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@RuntimePermissions
 public class MainActivity extends AppCompatActivity {
 
   public static final String SHOW_SORT_ITEM = "show sort item";
@@ -54,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
   public static final String SORTING_STYLE = "sorting style";
   public static final String REFRESH_CONFIG = "sorting style";
   public static final String SHARED = "SHARED";
+  public static final String SET_RINGTONE = "set ringtone";
+  public static final String SOUND_PATH = "sound path";
 
   private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
     @Override
@@ -70,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
       }
       if (REFRESH_CONFIG.equals(intent.getAction())) {
         retrieveConfig();
+      }
+      if (SET_RINGTONE.equals(intent.getAction())){
+        MainActivityPermissionsDispatcher.setRingtoneWithCheck(MainActivity.this, intent.getStringExtra(SOUND_PATH), true);
       }
     }
   };
@@ -112,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public Fragment getItem(int position) {
-      if(position == 2){
+      if (position == 2) {
         return BoxesFragment.newInstance();
       } else {
         return SoundsFragment.newInstance(FragmentStyle.values()[position].onlyFavorites);
@@ -177,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
     intentFilter.addAction(SHOW_SORT_ITEM);
     intentFilter.addAction(HIDE_SORT_ITEM);
     intentFilter.addAction(REFRESH_CONFIG);
+    intentFilter.addAction(SET_RINGTONE);
     LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
 
     realm = Realm.getDefaultInstance();
@@ -228,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
         final Realm realm = Realm.getDefaultInstance();
         String title = realm.where(Config.class).findFirst().getTitle();
         realm.close();
-        if(title == null){
+        if (title == null) {
           title = getResources().getString(R.string.app_name);
         }
         Intent sendIntent = new Intent();
@@ -309,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void onResponse(Call<Config> call, Response<Config> response) {
         final Config config = response.body();
-        if(config != null){
+        if (config != null) {
           Realm realm = Realm.getDefaultInstance();
           realm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -335,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-  private void retrieveOtherBoxes(){
+  private void retrieveOtherBoxes() {
     BoiteServices.API.getBoxes().enqueue(new Callback<List<SoundBox>>() {
       @Override
       public void onResponse(Call<List<SoundBox>> call, Response<List<SoundBox>> response) {
@@ -370,6 +386,59 @@ public class MainActivity extends AppCompatActivity {
     } catch (Exception e) {
       e.printStackTrace();
 
+    }
+  }
+
+  @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+  void setRingtone(String soundPath, boolean setAsDefault) {
+
+    final File fileSound = new File(getFilesDir() + "/" + soundPath);
+
+    final File ringtone = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES), soundPath);
+
+    try{
+      BoiteServices.copyInputStreamToFile(new FileInputStream(fileSound), ringtone);
+    } catch (IOException exception) {
+      exception.printStackTrace();
+    }
+
+    ContentValues values = new ContentValues();
+    values.put(MediaStore.MediaColumns.DATA, ringtone.getAbsolutePath());
+    values.put(MediaStore.MediaColumns.TITLE, soundPath.replace(".mp3", ""));
+    values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/mp3");
+    values.put(MediaStore.MediaColumns.SIZE, ringtone.length());
+    values.put(MediaStore.Audio.Media.ARTIST, R.string.app_name);
+    values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
+    values.put(MediaStore.Audio.Media.IS_NOTIFICATION, true);
+    values.put(MediaStore.Audio.Media.IS_ALARM, true);
+    values.put(MediaStore.Audio.Media.IS_MUSIC, false);
+
+
+
+    Uri uri = MediaStore.Audio.Media.getContentUriForPath(ringtone
+        .getAbsolutePath());
+    getContentResolver().delete(
+        uri,
+        MediaStore.MediaColumns.DATA + "=\""
+            + ringtone.getAbsolutePath() + "\"", null);
+    Uri newUri = getContentResolver().insert(uri, values);
+
+    if(setAsDefault){
+      MainActivityPermissionsDispatcher.setDefaultRingtoneWithCheck(this, newUri, new int[]{RingtoneManager.TYPE_NOTIFICATION});
+    }
+
+  }
+
+  @NeedsPermission(Manifest.permission.WRITE_SETTINGS)
+  void setDefaultRingtone(Uri ringtone, @IntRange(from = 0, to = 4) int ... soundTypes){
+    try {
+      for (int soundType : soundTypes) {
+        RingtoneManager.setActualDefaultRingtoneUri(
+            getApplicationContext(), soundType,
+            ringtone);
+      }
+    } catch (Throwable ignored) {
+      ignored.printStackTrace();
     }
   }
 
