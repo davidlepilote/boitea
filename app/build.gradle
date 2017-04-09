@@ -107,6 +107,13 @@ android {
                                     onesignal_google_project_number: "617999673958",
                                     deeplink: "cagole"]
         }
+        mlg {
+            applicationId "com.monirapps.boiteamlg"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"mlg"'
+            manifestPlaceholders = [onesignal_app_id: "c8d9dc60-24f9-4b62-b42c-62b5c1fbe7a6",
+                                    onesignal_google_project_number: "538861956070",
+                                    deeplink: "mlg"]
+        }
     }
 }
 
@@ -157,6 +164,10 @@ dependencies {
 
     //RATING BAR
     compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
+
+    //PERMISSION DISPATCHER
+    compile 'com.github.hotchemi:permissionsdispatcher:2.3.2'
+    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.2'
 
     testCompile 'junit:junit:4.12'
 }
