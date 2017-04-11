@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "162429468500",
+    "firebase_url": "https://boiteapoutou.firebaseio.com",
+    "project_id": "boiteapoutou",
+    "storage_bucket": "boiteapoutou.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162429468500:android:6a3e0d71ef1fa4e5",
+        "android_client_info": {
+          "package_name": "com.monirapps.boiteapoutou"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "162429468500-tidrrutsp2kl5cromua1fsdbc261akho.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtdjwWx-lTZ-lX7zKb3oYx9lC4GgXXVUw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

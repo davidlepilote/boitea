@@ -114,6 +114,13 @@ android {
                                     onesignal_google_project_number: "538861956070",
                                     deeplink: "mlg"]
         }
+        poutou {
+            applicationId "com.monirapps.boiteapoutou"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"poutou"'
+            manifestPlaceholders = [onesignal_app_id: "d35c98b9-3e3a-4ad0-9e9c-fbe58136d1a3",
+                                    onesignal_google_project_number: "162429468500",
+                                    deeplink: "poutou"]
+        }
     }
 }
 
