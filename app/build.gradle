@@ -128,6 +128,13 @@ android {
                                     onesignal_google_project_number: "148889516674",
                                     deeplink: "malou"]
         }
+        thekairi {
+            applicationId "com.monirapps.boiteathekairi"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"thekairi"'
+            manifestPlaceholders = [onesignal_app_id: "55749e22-971b-4827-8cc8-aad55109ea60",
+                                    onesignal_google_project_number: "566316335009",
+                                    deeplink: "thekairi"]
+        }
     }
 }
 
