@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1046102945467",
+    "firebase_url": "https://boitearisitas.firebaseio.com",
+    "project_id": "boitearisitas",
+    "storage_bucket": "boitearisitas.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1046102945467:android:fd6a8ce9e64c5f24",
+        "android_client_info": {
+          "package_name": "com.monirapps.boitearisitas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1046102945467-6l25m6pkqsaa7q1fondq9fcfkrlst3o1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkHXPKFsPfaINE8FFxqxf6agl7VqoFncw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

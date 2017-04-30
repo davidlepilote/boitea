@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "489043607003",
+    "firebase_url": "https://boitealepen.firebaseio.com",
+    "project_id": "boitealepen",
+    "storage_bucket": "boitealepen.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:489043607003:android:4172e0b8d09612eb",
+        "android_client_info": {
+          "package_name": "com.monirapps.boitealepen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "489043607003-6g8othtpvfsh4vu3k7gdmkibpb7l3lo5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ4D5WtwIwgc8nCd-QwQzB3EdoVQD8-l4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

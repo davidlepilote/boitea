@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "921114931573",
+    "firebase_url": "https://boitealopez.firebaseio.com",
+    "project_id": "boitealopez",
+    "storage_bucket": "boitealopez.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:921114931573:android:6d1e98bce0584cdd",
+        "android_client_info": {
+          "package_name": "com.monirapps.boitealopez"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "921114931573-hr4bntcjk19e2nvi6t5i54p3dcdpkpc7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTgM7rwDCllWyL0ScEpShDmLkENUJn8HE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
