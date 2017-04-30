@@ -51,6 +51,8 @@ import static android.R.attr.shape;
 
 public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewHolder> {
 
+  public static final String SOUND_TITLE = "sound title";
+
   public static class SoundViewHolder extends RecyclerView.ViewHolder {
 
     private CardView cardView;
@@ -212,9 +214,12 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
     NativeAdViewHolder nativeAdViewHolder = (NativeAdViewHolder) holder;
     final RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) nativeAdViewHolder.root.getLayoutParams();
     if(nativeAd == null) {
+      nativeAdViewHolder.itemView.setVisibility(View.GONE);
       layoutParams.topMargin = layoutParams.bottomMargin = 0 ;
+      layoutParams.setMargins(0,0,0,0);
       layoutParams.height = 0;
     } else {
+      nativeAdViewHolder.itemView.setVisibility(View.VISIBLE);
       layoutParams.topMargin = layoutParams.bottomMargin = nativeAdMargin ;
       layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT;
       nativeAdViewHolder.title.setText(nativeAd.getTitle());
@@ -258,7 +263,7 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
     holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
       @Override
       public boolean onLongClick(View v) {
-        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(MainActivity.SET_RINGTONE).putExtra(MainActivity.SOUND_PATH, sound.getSound()));
+        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(MainActivity.SET_RINGTONE).putExtra(MainActivity.SOUND_PATH, sound.getSound()).putExtra(MainActivity.SOUND_TITLE, sound.getTitle()));
         return true;
       }
     });

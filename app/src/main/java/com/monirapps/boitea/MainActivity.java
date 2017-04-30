@@ -20,6 +20,7 @@ import android.provider.MediaStore;
 import android.support.annotation.IntRange;
 import android.support.annotation.IntegerRes;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -36,10 +37,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.adincube.sdk.AdinCube;
+import com.monirapps.boitea.adapter.SoundsAdapter;
 import com.monirapps.boitea.bo.Config;
 import com.monirapps.boitea.bo.Sound;
 import com.monirapps.boitea.bo.SoundBox;
 import com.monirapps.boitea.fragment.BoxesFragment;
+import com.monirapps.boitea.fragment.DialogRingtoneFragment;
 import com.monirapps.boitea.fragment.SoundsFragment;
 import com.monirapps.boitea.ws.BoiteServices;
 
@@ -49,6 +53,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.jar.*;
 
+import de.mateware.snacky.Snacky;
 import io.realm.Realm;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -56,7 +61,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-@RuntimePermissions
 public class MainActivity extends AppCompatActivity {
 
   public static final String SHOW_SORT_ITEM = "show sort item";
@@ -66,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
   public static final String SHARED = "SHARED";
   public static final String SET_RINGTONE = "set ringtone";
   public static final String SOUND_PATH = "sound path";
+  public static final String SOUND_TITLE = "sound title";
+  public static final String DID_CLICKED_NOTIF = "did clicked notif";
 
   private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
     @Override
@@ -84,7 +90,8 @@ public class MainActivity extends AppCompatActivity {
         retrieveConfig();
       }
       if (SET_RINGTONE.equals(intent.getAction())){
-        MainActivityPermissionsDispatcher.setRingtoneWithCheck(MainActivity.this, intent.getStringExtra(SOUND_PATH), true);
+        DialogRingtoneFragment.instantiate(intent.getStringExtra(SOUND_PATH), intent.getStringExtra(SOUND_TITLE)).show(getSupportFragmentManager(), DialogRingtoneFragment.DIALOG_RINGTONE);
+        //MainActivityPermissionsDispatcher.setRingtoneWithCheck(MainActivity.this, intent.getStringExtra(SOUND_PATH), true);
       }
     }
   };
@@ -167,22 +174,12 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-//    LayoutInflaterCompat.setFactory(getLayoutInflater(), new LayoutInflaterFactory() {
-//      @Override
-//      public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-//        if("TextView".equals(name)){
-//          TextView textView = new TextView(context, attrs);
-//          textView.setTypeface(Typefaces.MONTSERRAT.typeface(context));
-//          return textView;
-//        } else {
-//          return null;
-//        }
-//      }
-//    });
 
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_main);
+
+    AdinCube.Rewarded.fetch(this);
 
     setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
@@ -225,6 +222,20 @@ public class MainActivity extends AppCompatActivity {
     });
 
     retrieveConfig();
+
+    showRingtoneSnackBarIfNeeded();
+  }
+
+  private void showRingtoneSnackBarIfNeeded() {
+    final SharedPreferences preferences = getSharedPreferences(SHARED, MODE_PRIVATE);
+    if(preferences.getBoolean(DID_CLICKED_NOTIF, false) == false){
+      Snacky.builder()
+          .setActivty(this)
+          .setText(getString(R.string.save_explain))
+          .setDuration(Snacky.LENGTH_LONG)
+          .info()
+          .show();
+    }
   }
 
   @Override
@@ -386,59 +397,6 @@ public class MainActivity extends AppCompatActivity {
     } catch (Exception e) {
       e.printStackTrace();
 
-    }
-  }
-
-  @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-  void setRingtone(String soundPath, boolean setAsDefault) {
-
-    final File fileSound = new File(getFilesDir() + "/" + soundPath);
-
-    final File ringtone = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES), soundPath);
-
-    try{
-      BoiteServices.copyInputStreamToFile(new FileInputStream(fileSound), ringtone);
-    } catch (IOException exception) {
-      exception.printStackTrace();
-    }
-
-    ContentValues values = new ContentValues();
-    values.put(MediaStore.MediaColumns.DATA, ringtone.getAbsolutePath());
-    values.put(MediaStore.MediaColumns.TITLE, soundPath.replace(".mp3", ""));
-    values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/mp3");
-    values.put(MediaStore.MediaColumns.SIZE, ringtone.length());
-    values.put(MediaStore.Audio.Media.ARTIST, R.string.app_name);
-    values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
-    values.put(MediaStore.Audio.Media.IS_NOTIFICATION, true);
-    values.put(MediaStore.Audio.Media.IS_ALARM, true);
-    values.put(MediaStore.Audio.Media.IS_MUSIC, false);
-
-
-
-    Uri uri = MediaStore.Audio.Media.getContentUriForPath(ringtone
-        .getAbsolutePath());
-    getContentResolver().delete(
-        uri,
-        MediaStore.MediaColumns.DATA + "=\""
-            + ringtone.getAbsolutePath() + "\"", null);
-    Uri newUri = getContentResolver().insert(uri, values);
-
-    if(setAsDefault){
-      MainActivityPermissionsDispatcher.setDefaultRingtoneWithCheck(this, newUri, new int[]{RingtoneManager.TYPE_NOTIFICATION});
-    }
-
-  }
-
-  @NeedsPermission(Manifest.permission.WRITE_SETTINGS)
-  void setDefaultRingtone(Uri ringtone, @IntRange(from = 0, to = 4) int ... soundTypes){
-    try {
-      for (int soundType : soundTypes) {
-        RingtoneManager.setActualDefaultRingtoneUri(
-            getApplicationContext(), soundType,
-            ringtone);
-      }
-    } catch (Throwable ignored) {
-      ignored.printStackTrace();
     }
   }
 

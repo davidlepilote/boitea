@@ -11,4 +11,18 @@
     <string name="mail_subject">Suggestion de boîte</string>
     <string name="share">Partager</string>
     <string name="share_text">Regarde cette app : %1$s ! Ce sont toutes ses meilleures punchlines regroupées au même endroit. C\'est excellent ! Tu peux la télécharger ici : http://play.google.com/store/apps/details?id=%2$s</string>
+    <string name="authorize_settings">Vous devez autoriser l\'application à changer les paramètres pour mettre un son par défaut</string>
+    <string name="authorize_write">Vous devez autoriser l\'application à changer les paramètres pour mettre un son par défaut</string>
+    <string name="authorize_write_settings">Vous devez autoriser l\'application à changer les paramètres pour mettre un son par défaut</string>
+    <string name="error_ad">Aucune pub n\'a été chargée. Avez-vous oublié de mettre Internet ?</string>
+    <string name="sound_added">Son bien ajouté "</string>
+    <string name="default_explain">Et l\'utiliser directement</string>
+    <string name="ringtone_explain">Nous allons vous demander l\'autorisation de l\'ajouter sur votre téléphone</string>
+    <string name="alarm">Alarme</string>
+    <string name="notification">Notification</string>
+    <string name="ringtone">Sonnerie</string>
+    <string name="save_sound">Enregistrer ce son comme</string>
+    <string name="save">Enregistrer</string>
+    <string name="ad_explain">Votre son sera disponible dès la fin de la vidéo</string>
+    <string name="save_explain">Vous pouvez sauvegarder un son en faisant un appui long dessus</string>
 </resources>

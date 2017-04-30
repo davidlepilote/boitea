@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#00E676</color>
     <color name="sound">#FCAD26</color>
-    <color name="mere">#9E54BD</color>
-    <color name="frere">#4593E3</color>
     <color name="sound_text_color">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="footer_background">#AAAAAA</color>
+    <color name="black">#333333</color>
 </resources>
