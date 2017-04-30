@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "148889516674",
+    "firebase_url": "https://boiteamalou.firebaseio.com",
+    "project_id": "boiteamalou",
+    "storage_bucket": "boiteamalou.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:148889516674:android:ec54b3042a901c87",
+        "android_client_info": {
+          "package_name": "com.monirapps.boiteamalou"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "148889516674-5aaj1mcj6d7p11vmkb5a3s1sisu05cf3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5TmIZBbOeco9VpesJUS3Io2EiyS7Ixbk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "566316335009",
+    "firebase_url": "https://boiteathekairi.firebaseio.com",
+    "project_id": "boiteathekairi",
+    "storage_bucket": "boiteathekairi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566316335009:android:6bf3c47463c71874",
+        "android_client_info": {
+          "package_name": "com.monirapps.boiteathekairi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "566316335009-u4m96fgjqucabotcm2mu5vqq82kk64d4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJmNmioya55nOoHo5QS-E94Yejo-WVm2o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

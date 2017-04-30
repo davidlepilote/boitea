@@ -107,6 +107,34 @@ android {
                                     onesignal_google_project_number: "617999673958",
                                     deeplink: "cagole"]
         }
+        mlg {
+            applicationId "com.monirapps.boiteamlg"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"mlg"'
+            manifestPlaceholders = [onesignal_app_id: "c8d9dc60-24f9-4b62-b42c-62b5c1fbe7a6",
+                                    onesignal_google_project_number: "538861956070",
+                                    deeplink: "mlg"]
+        }
+        poutou {
+            applicationId "com.monirapps.boiteapoutou"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"poutou"'
+            manifestPlaceholders = [onesignal_app_id: "d35c98b9-3e3a-4ad0-9e9c-fbe58136d1a3",
+                                    onesignal_google_project_number: "162429468500",
+                                    deeplink: "poutou"]
+        }
+        malou {
+            applicationId "com.monirapps.boiteamalou"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"malou"'
+            manifestPlaceholders = [onesignal_app_id: "b35e4ab2-0f13-47b1-b30b-e6144a9cfe76",
+                                    onesignal_google_project_number: "148889516674",
+                                    deeplink: "malou"]
+        }
+        thekairi {
+            applicationId "com.monirapps.boiteathekairi"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"thekairi"'
+            manifestPlaceholders = [onesignal_app_id: "55749e22-971b-4827-8cc8-aad55109ea60",
+                                    onesignal_google_project_number: "566316335009",
+                                    deeplink: "thekairi"]
+        }
     }
 }
 
