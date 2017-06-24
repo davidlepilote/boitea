@@ -216,7 +216,6 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
     if(nativeAd == null) {
       nativeAdViewHolder.itemView.setVisibility(View.GONE);
       layoutParams.topMargin = layoutParams.bottomMargin = 0 ;
-      layoutParams.setMargins(0,0,0,0);
       layoutParams.height = 0;
     } else {
       nativeAdViewHolder.itemView.setVisibility(View.VISIBLE);
