@@ -109,7 +109,7 @@ public class SoundsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     return root;
   }
 
-  private void refreshList() {
+  private void  refreshList() {
 
     if(data != null){
       data.removeAllChangeListeners();

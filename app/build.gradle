@@ -156,6 +156,13 @@ android {
                                     onesignal_google_project_number: "921114931573",
                                     deeplink: "lopez"]
         }
+        ah {
+            applicationId "com.monirapps.boiteaah"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"ah"'
+            manifestPlaceholders = [onesignal_app_id: "c387a8c3-0e3a-4f06-aeb3-1eb750fa1e22",
+                                    onesignal_google_project_number: "583951388896",
+                                    deeplink: "ah"]
+        }
     }
 }
 
