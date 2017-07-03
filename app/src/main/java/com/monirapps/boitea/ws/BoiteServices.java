@@ -101,9 +101,9 @@ public enum BoiteServices {
                   if (sound != null) {
                     sound.setSoundDownloaded(true);
                   }
+                  realm.close();
                 }
               });
-              realm.close();
             }
           }).start();
         } else {

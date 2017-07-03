@@ -340,9 +340,9 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
             currentSound.setGlobalHits(currentSound.getGlobalHits() + 1);
             holder.totalClicks.setText(String.format(Locale.FRENCH, "%d", currentSound.getGlobalHits()));
             holder.myClicks.setText(String.format(Locale.FRENCH, "%d", currentSound.getPersonalHits()));
+            realm.close();
           }
         });
-        realm.close();
       }
     });
     holder.favorite.setProgress(sound.isFavorite() ? 1f : 0f);
@@ -365,9 +365,9 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
           @Override
           public void execute(Realm realm) {
             realm.where(Sound.class).equalTo("id", sound.getId()).findFirst().setFavorite(!sound.isFavorite());
+            realm.close();
           }
         });
-        realm.close();
       }
     });
   }

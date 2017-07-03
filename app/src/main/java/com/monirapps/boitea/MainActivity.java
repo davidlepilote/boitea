@@ -63,6 +63,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.mopub.common.Constants.HTTP;
+
 public class MainActivity extends AppCompatActivity {
 
   public static final String SHOW_SORT_ITEM = "show sort item";
@@ -351,9 +353,9 @@ public class MainActivity extends AppCompatActivity {
               savedConfig = realm.where(Config.class).findFirst();
               savedConfig.updateConfig(getApplicationContext(), config);
               endLoading(savedConfig);
+              realm.close();
             }
           });
-          realm.close();
         }
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(SoundsFragment.CONFIG_RETRIEVED));
       }
@@ -369,15 +371,26 @@ public class MainActivity extends AppCompatActivity {
     BoiteServices.API.getPromo().enqueue(new Callback<Promo>() {
       @Override
       public void onResponse(Call<Promo> call, Response<Promo> response) {
-        final Promo promo = response.body();
-        final Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
-          @Override
-          public void execute(Realm realm) {
-            realm.copyToRealmOrUpdate(promo);
-            realm.close();
-          }
-        });
+        if (response.code() == 200) {
+          final Promo promo = response.body();
+          final Realm realm = Realm.getDefaultInstance();
+          realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+              realm.copyToRealmOrUpdate(promo);
+              realm.close();
+            }
+          });
+        } else {
+          final Realm realm = Realm.getDefaultInstance();
+          realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+              realm.where(Promo.class).findAll().deleteAllFromRealm();
+              realm.close();
+            }
+          });
+        }
       }
 
       @Override
