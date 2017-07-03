@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -30,8 +31,11 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.monirapps.boitea.R;
 import com.monirapps.boitea.MainActivity;
 import com.monirapps.boitea.Typefaces;
+import com.monirapps.boitea.bo.Promo;
 import com.monirapps.boitea.bo.Sound;
 import com.monirapps.boitea.ws.BoiteServices;
+
+import org.w3c.dom.Text;
 
 import java.util.HashSet;
 import java.util.List;
@@ -41,8 +45,10 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import io.realm.Realm;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 
+import static android.R.attr.factor;
 import static android.R.attr.shape;
 
 /**
@@ -83,6 +89,28 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
     }
 
   }
+
+  public static class PromoViewHolder extends SoundViewHolder {
+
+    private CardView cardView;
+
+    private ImageView icon;
+
+    private TextView title;
+
+    private TextView subtitle;
+
+    public PromoViewHolder(View itemView) {
+      super(itemView);
+      cardView = (CardView) itemView.findViewById(R.id.card_view);
+      if (cardView != null) {
+        icon = (ImageView) itemView.findViewById(R.id.icon);
+        title = (TextView) itemView.findViewById(R.id.title);
+        subtitle = (TextView) itemView.findViewById(R.id.subtitle);
+      }
+    }
+  }
+
   public static class NativeAdViewHolder extends SoundViewHolder {
 
     private ImageView icon;
@@ -116,7 +144,11 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
 
   private static final int NATIVE = 2;
 
+  private static final int PROMO = 3;
+
   private final RealmResults<Sound> data;
+
+  private final RealmResults<Promo> promo;
 
   private final FirebaseAnalytics firebaseAnalytics;
 
@@ -136,12 +168,13 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
     buttonNativeAdDrawable.setShape(GradientDrawable.RECTANGLE);
   }
 
-  public SoundsAdapter(Context context, @Nullable RealmResults<Sound> data) {
+  public SoundsAdapter(Context context, @Nullable RealmResults<Sound> data, @Nullable RealmResults<Promo> promo) {
     this.context = context;
     this.nativeAdMargin = context.getResources().getDimensionPixelSize(R.dimen.native_ad_margin);
     this.nativeAdCornerRadius = context.getResources().getDimensionPixelSize(R.dimen.native_ad_corner_radius);
     firebaseAnalytics = FirebaseAnalytics.getInstance(context);
     this.data = data;
+    this.promo = promo;
     buttonNativeAdDrawable.setCornerRadii(new float[] { nativeAdCornerRadius, nativeAdCornerRadius, nativeAdCornerRadius, nativeAdCornerRadius, nativeAdCornerRadius, nativeAdCornerRadius, nativeAdCornerRadius, nativeAdCornerRadius });
     buttonNativeAdDrawable.setColor(ContextCompat.getColor(this.context, R.color.colorPrimary));
   }
@@ -172,6 +205,8 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
         return new SoundViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.sound_item, parent, false));
       case NATIVE:
         return new NativeAdViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.native_ad_item, parent, false));
+      case PROMO:
+        return new PromoViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.promo_item, parent, false));
       default:
         return new SoundViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.sound_item, parent, false));
     }
@@ -179,7 +214,9 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
 
   @Override
   public int getItemViewType(int position) {
-    if (position % 5 == 2) {
+    if (position == 0 && promo.size() > 0) {
+      return PROMO;
+    } else if (position % 5 == 2) {
       requestAd(position);
       return NATIVE;
     } else {
@@ -194,17 +231,19 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
   }
 
   public int getRealIndex(int realmPosition){
-    return realmPosition + (realmPosition + 2) / 4;
+    return realmPosition + (realmPosition + 2) / 4 + promo.size();
   }
 
   private int getRealmIndex(int realPosition) {
-    return realPosition - (realPosition + 2) / 5;
+    return realPosition - (realPosition + 2) / 5 - promo.size() ;
   }
 
   @Override
   public void onBindViewHolder(final SoundViewHolder holder, int position) {
-    if (position % 5 == 2) {
-        bindNativeAdViewHolder(holder, nativeAds.get(position));
+    if (position == 0 && promo.size() > 0) {
+      bindPromoViewHolder(holder, promo.get(0));
+    } else if (position % 5 == 2) {
+      bindNativeAdViewHolder(holder, nativeAds.get(position));
     } else {
       bindSoundViewHolder(holder, data.get(getRealmIndex(position)));
     }
@@ -243,6 +282,24 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
       Glide.with(holder.itemView.getContext()).load(nativeAd.getIcon().getUrl()).fitCenter().into(nativeAdViewHolder.icon);
       AdinCube.Native.link(nativeAdViewHolder.root, nativeAd);
     }
+  }
+
+  private void bindPromoViewHolder(final SoundViewHolder holder, final Promo promo) {
+    PromoViewHolder promoViewHolder = (PromoViewHolder) holder;
+    promoViewHolder.title.setText(promo.getTitle());
+    promoViewHolder.title.setTypeface(Typefaces.GROBOLD.typeface(context));
+    promoViewHolder.subtitle.setText(promo.getSubtitle());
+    promoViewHolder.subtitle.setTypeface(Typefaces.GROBOLD.typeface(context));
+    BoiteServices.bindPicture(holder.itemView.getContext(), promo.getPicture(), promoViewHolder.icon, Long.MAX_VALUE);
+    promoViewHolder.cardView.setCardBackgroundColor(Color.parseColor(promo.getColor()));
+    holder.cardView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(promo.getDeeplink()));
+        context.startActivity(intent);
+      }
+    });
   }
 
   private void bindSoundViewHolder(final SoundViewHolder holder, final Sound sound) {
@@ -317,7 +374,7 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
 
   @Override
   public int getItemCount() {
-    return data.size() + (data.size() + 1) / 4;
+    return data.size() + (data.size() + 1) / 4 + promo.size();
   }
 
 }

@@ -119,21 +119,6 @@ public class BoxesAdapter extends RecyclerView.Adapter<BoxesAdapter.SoundBoxView
         holder.subtitle.setText(soundBox.getSubtitle());
         holder.subtitle.setTypeface(Typefaces.GROBOLD.typeface(getContext()));
         BoiteServices.bindPicture(getContext(), BoiteServices.BASE_URL + soundBox.getIcon(), holder.icon, soundBox.getUpdated());
-//        Glide.with(getContext()).load(BoiteServices.BASE_URL + soundBox.getIcon()).asBitmap().diskCacheStrategy(DiskCacheStrategy.RESULT)
-//            .signature(new StringSignature(lastKnownGoodValue + 1))
-//            .thumbnail(
-//                Glide.with(getContext())
-//                    .load(BoiteServices.BASE_URL + soundBox.getIcon())
-//                    .signature(new StringSignature(lastKnownGoodValue)))
-//            .centerCrop().into(new BitmapImageViewTarget(holder.icon) {
-//          @Override
-//          protected void setResource(Bitmap resource) {
-//            RoundedBitmapDrawable circularBitmapDrawable =
-//                RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
-//            circularBitmapDrawable.setCircular(true);
-//            holder.icon.setImageDrawable(circularBitmapDrawable);
-//          }
-//        });
         try {
           holder.cardView.setCardBackgroundColor(Color.parseColor(soundBox.getColor()));
         } catch (IllegalArgumentException exception) {

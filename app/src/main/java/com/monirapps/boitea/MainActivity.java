@@ -38,8 +38,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.adincube.sdk.AdinCube;
+import com.google.firebase.crash.FirebaseCrash;
 import com.monirapps.boitea.adapter.SoundsAdapter;
 import com.monirapps.boitea.bo.Config;
+import com.monirapps.boitea.bo.Promo;
 import com.monirapps.boitea.bo.Sound;
 import com.monirapps.boitea.bo.SoundBox;
 import com.monirapps.boitea.fragment.BoxesFragment;
@@ -332,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
     BoiteApplication.glideUpdateValue++;
     preferences.edit().putInt(BoiteApplication.GLIDE_UPDATE_VALUE, BoiteApplication.glideUpdateValue % 1_000_000).commit();
     retrieveOtherBoxes();
+    retrievePromo();
     BoiteServices.API.getConfig().enqueue(new Callback<Config>() {
       @Override
       public void onResponse(Call<Config> call, Response<Config> response) {
@@ -362,6 +365,29 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
+  private void retrievePromo() {
+    BoiteServices.API.getPromo().enqueue(new Callback<Promo>() {
+      @Override
+      public void onResponse(Call<Promo> call, Response<Promo> response) {
+        final Promo promo = response.body();
+        final Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+          @Override
+          public void execute(Realm realm) {
+            realm.copyToRealmOrUpdate(promo);
+            realm.close();
+          }
+        });
+      }
+
+      @Override
+      public void onFailure(Call<Promo> call, Throwable t) {
+        FirebaseCrash.report(t);
+        t.printStackTrace();
+      }
+    });
+  }
+
   private void retrieveOtherBoxes() {
     BoiteServices.API.getBoxes().enqueue(new Callback<List<SoundBox>>() {
       @Override
@@ -372,9 +398,9 @@ public class MainActivity extends AppCompatActivity {
           @Override
           public void execute(Realm realm) {
             realm.copyToRealmOrUpdate(boxes);
+            realm.close();
           }
         });
-        realm.close();
       }
 
       @Override

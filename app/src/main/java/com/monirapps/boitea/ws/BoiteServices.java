@@ -1,35 +1,23 @@
 package com.monirapps.boitea.ws;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.widget.ImageView;
 
-import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.signature.StringSignature;
 import com.google.firebase.crash.FirebaseCrash;
-import com.monirapps.boitea.BoiteApplication;
 import com.monirapps.boitea.BuildConfig;
 import com.monirapps.boitea.bo.Config;
+import com.monirapps.boitea.bo.Promo;
 import com.monirapps.boitea.bo.Sound;
 import com.monirapps.boitea.bo.SoundBox;
-import com.monirapps.boitea.fragment.SoundsFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -73,6 +61,10 @@ public enum BoiteServices {
 
   public Call<List<SoundBox>> getBoxes() {
     return restApi.getBoxes();
+  }
+
+  public Call<Promo> getPromo() {
+    return restApi.getPromo();
   }
 
   public void hit(final String id) {

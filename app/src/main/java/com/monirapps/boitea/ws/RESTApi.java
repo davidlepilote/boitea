@@ -1,6 +1,7 @@
 package com.monirapps.boitea.ws;
 
 import com.monirapps.boitea.bo.Config;
+import com.monirapps.boitea.bo.Promo;
 import com.monirapps.boitea.bo.SoundBox;
 
 import java.util.List;
@@ -28,4 +29,7 @@ public interface RESTApi {
 
   @GET("hit.php")
   Call<ResponseBody> hit(@Query("id") String id, @Query("box") String box);
+
+  @GET("deeplink.php?box=deeptest")
+  Call<Promo> getPromo();
 }

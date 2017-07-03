@@ -19,6 +19,7 @@ import com.monirapps.boitea.MainActivity;
 import com.monirapps.boitea.R;
 import com.monirapps.boitea.SortStyle;
 import com.monirapps.boitea.adapter.SoundsAdapter;
+import com.monirapps.boitea.bo.Promo;
 import com.monirapps.boitea.bo.Sound;
 
 import io.realm.OrderedCollectionChangeSet;
@@ -26,6 +27,7 @@ import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 
 public class SoundsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -54,6 +56,8 @@ public class SoundsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
   private RealmResults<Sound> data;
 
+  private RealmResults<Promo> promo;
+
   private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -63,7 +67,7 @@ public class SoundsFragment extends Fragment implements SwipeRefreshLayout.OnRef
       }
       if (CONFIG_RETRIEVED.equals(intent.getAction())){
         pullToRefresh.setRefreshing(false);
-        soundsAdapter.notifyItemRangeChanged(0, data.size());
+        soundsAdapter.notifyItemRangeChanged(0, data.size() + promo.size());
       }
     }
   };
@@ -110,6 +114,10 @@ public class SoundsFragment extends Fragment implements SwipeRefreshLayout.OnRef
   }
 
   private void  refreshList() {
+
+    if(promo != null){
+      promo.removeAllChangeListeners();
+    }
 
     if(data != null){
       data.removeAllChangeListeners();
@@ -168,7 +176,21 @@ public class SoundsFragment extends Fragment implements SwipeRefreshLayout.OnRef
       }
     });
 
-    soundsAdapter = new SoundsAdapter(getContext(), data);
+    promo = realm.where(Promo.class).findAll();
+
+    promo.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Promo>>() {
+      @Override
+      public void onChange(RealmResults<Promo> collection, OrderedCollectionChangeSet changeSet) {
+
+        if (changeSet == null) {
+          if (collection.size() == 1) {
+            soundsAdapter.notifyItemInserted(0);
+          }
+        }
+      }
+    });
+
+    soundsAdapter = new SoundsAdapter(getContext(), data, promo);
 
     sounds.setLayoutManager(new LinearLayoutManager(getContext()) {
       @Override
