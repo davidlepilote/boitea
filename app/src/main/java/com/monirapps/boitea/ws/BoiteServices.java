@@ -94,16 +94,20 @@ public enum BoiteServices {
               final InputStream fileSound = response.body().byteStream();
               copyInputStreamToFile(fileSound, new File(context.getFilesDir() + "/" + soundPath));
               Realm realm = Realm.getDefaultInstance();
-              realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                  final Sound sound = realm.where(Sound.class).equalTo("id", id).findFirst();
-                  if (sound != null) {
-                    sound.setSoundDownloaded(true);
+              if (!realm.isClosed()) {
+                realm.executeTransaction(new Realm.Transaction() {
+                  @Override
+                  public void execute(Realm realm) {
+                    if (!realm.isClosed()) {
+                      final Sound sound = realm.where(Sound.class).equalTo("id", id).findFirst();
+                      if (sound != null) {
+                        sound.setSoundDownloaded(true);
+                      }
+                      realm.close();
+                    }
                   }
-                  realm.close();
-                }
-              });
+                });
+              }
             }
           }).start();
         } else {

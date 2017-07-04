@@ -189,13 +189,6 @@ public class MainActivity extends AppCompatActivity {
 
     bindViews();
 
-    final IntentFilter intentFilter = new IntentFilter();
-    intentFilter.addAction(SHOW_SORT_ITEM);
-    intentFilter.addAction(HIDE_SORT_ITEM);
-    intentFilter.addAction(REFRESH_CONFIG);
-    intentFilter.addAction(SET_RINGTONE);
-    LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
-
     realm = Realm.getDefaultInstance();
 
     // We make sure here that if there is a config, the loading WILL stop (bug in Realm Listener ?)
@@ -313,10 +306,26 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
+  protected void onResume() {
+    super.onResume();
+    final IntentFilter intentFilter = new IntentFilter();
+    intentFilter.addAction(SHOW_SORT_ITEM);
+    intentFilter.addAction(HIDE_SORT_ITEM);
+    intentFilter.addAction(REFRESH_CONFIG);
+    intentFilter.addAction(SET_RINGTONE);
+    LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+  }
+
+  @Override
   protected void onDestroy() {
     super.onDestroy();
     realm.close();
-    LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
   }
 
   private void bindViews() {

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "463437057727",
+    "firebase_url": "https://boiteahendek.firebaseio.com",
+    "project_id": "boiteahendek",
+    "storage_bucket": "boiteahendek.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:463437057727:android:d2b7888d57ebc908",
+        "android_client_info": {
+          "package_name": "com.monirapps.boiteahandekbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "463437057727-5pu33qbqglhdm9nsec8os1c0jm2l9ni2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAqINWJerix6XO6VxvjPoFPgapdFHZkbw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

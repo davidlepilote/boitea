@@ -65,9 +65,12 @@ public class SoundsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         refreshList();
         pullToRefresh.setRefreshing(false);
       }
-      if (CONFIG_RETRIEVED.equals(intent.getAction())){
+      if (CONFIG_RETRIEVED.equals(intent.getAction())) {
         pullToRefresh.setRefreshing(false);
-        soundsAdapter.notifyItemRangeChanged(0, data.size() + promo.size());
+        try {
+          soundsAdapter.notifyItemRangeChanged(0, data.size() + promo.size());
+        } catch (IllegalStateException ignored) {
+        }
       }
     }
   };
@@ -113,13 +116,13 @@ public class SoundsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     return root;
   }
 
-  private void  refreshList() {
+  private void refreshList() {
 
-    if(promo != null){
+    if (promo != null) {
       promo.removeAllChangeListeners();
     }
 
-    if(data != null){
+    if (data != null) {
       data.removeAllChangeListeners();
     }
 
@@ -218,7 +221,7 @@ public class SoundsFragment extends Fragment implements SwipeRefreshLayout.OnRef
   @Override
   public void onDestroy() {
     super.onDestroy();
-    if(data != null){
+    if (data != null) {
       data.removeAllChangeListeners();
     }
     LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(broadcastReceiver);

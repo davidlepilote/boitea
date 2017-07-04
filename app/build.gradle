@@ -163,6 +163,13 @@ android {
                                     onesignal_google_project_number: "583951388896",
                                     deeplink: "ah"]
         }
+        hendek {
+            applicationId "com.monirapps.boiteahandekbox"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"HandekBox"'
+            manifestPlaceholders = [onesignal_app_id: "1179d153-8c1e-4c4b-88b7-6a712c3d3109",
+                                    onesignal_google_project_number: "463437057727",
+                                    deeplink: "HandekBox"]
+        }
     }
 }
 
