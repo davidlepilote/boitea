@@ -170,6 +170,13 @@ android {
                                     onesignal_google_project_number: "463437057727",
                                     deeplink: "HandekBox"]
         }
+        khaledfreak {
+            applicationId "com.monirapps.boiteakhaledfreak"
+            buildConfigField "String", "ENDPOINT_SUFFIX", '"khaledfreak"'
+            manifestPlaceholders = [onesignal_app_id: "07d864e8-d76c-4ff6-a1b0-1e03d0a502c5",
+                                    onesignal_google_project_number: "908892059637",
+                                    deeplink: "khaledfreak"]
+        }
     }
 }
 

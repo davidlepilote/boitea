@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "908892059637",
+    "firebase_url": "https://boiteakhaledfreak.firebaseio.com",
+    "project_id": "boiteakhaledfreak",
+    "storage_bucket": "boiteakhaledfreak.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908892059637:android:a9b5ce599762cfc7",
+        "android_client_info": {
+          "package_name": "com.monirapps.boiteakhaledfreak"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "908892059637-53ms95tci3b1ntbe1k91u3ekere8aq13.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoErfD8ugKFytaTlNLShRexcQPFhCGT8I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

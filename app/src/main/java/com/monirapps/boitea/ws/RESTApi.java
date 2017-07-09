@@ -30,6 +30,6 @@ public interface RESTApi {
   @GET("hit.php")
   Call<ResponseBody> hit(@Query("id") String id, @Query("box") String box);
 
-  @GET(BoiteServices.SUFFIX + "deeplink.php?box=deeptest")
-  Call<Promo> getPromo();
+  @GET("deeplink.php")
+  Call<Promo> getPromo(@Query("box") String box);
 }

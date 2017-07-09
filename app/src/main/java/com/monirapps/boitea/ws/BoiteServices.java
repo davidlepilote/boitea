@@ -64,7 +64,7 @@ public enum BoiteServices {
   }
 
   public Call<Promo> getPromo() {
-    return restApi.getPromo();
+    return restApi.getPromo(BuildConfig.ENDPOINT_SUFFIX);
   }
 
   public void hit(final String id) {
@@ -103,7 +103,6 @@ public enum BoiteServices {
                       if (sound != null) {
                         sound.setSoundDownloaded(true);
                       }
-                      realm.close();
                     }
                   }
                 });
