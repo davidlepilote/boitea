@@ -231,11 +231,11 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.SoundViewH
   }
 
   public int getRealIndex(int realmPosition){
-    return realmPosition + (realmPosition + 2) / 4 + promo.size();
+    return realmPosition + (realmPosition + (2 + promo.size())) / 4 + promo.size();
   }
 
   private int getRealmIndex(int realPosition) {
-    return realPosition - (realPosition + 2) / 5 - promo.size() ;
+    return realPosition - (realPosition + (2 + promo.size())) / 5 - promo.size() ;
   }
 
   @Override
